@@ -5,10 +5,16 @@ import time
 import numpy as np
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output, State
+from plots_api import week_day_matrix_avg_delay
 
+from spark_api import load_dataset
+
+
+
+df = load_dataset()
 
 external_stylesheets = [
     'https://codepen.io/mikesmith1611/pen/QOKgpG.css',
@@ -61,6 +67,25 @@ def get_graph(class_name, **kwargs):
         ],
     )
 
+screen1 = html.Div(
+    className='parent',
+    children=[
+        dbc.Row([
+            dbc.Col([get_graph(
+                class_name='div1',
+                figure=week_day_matrix_avg_delay(df),
+                id='map_graph',
+                config=plot_config,
+            )]),
+            dbc.Col([get_graph(
+                class_name='div1',
+                figure=week_day_matrix_avg_delay(df),
+                id='map_graph',
+                config=plot_config,
+            )]),
+        ])
+    ]
+)
 
 header = html.Div(
     className='header',
@@ -135,7 +160,7 @@ app.layout = html.Div(
                         #control_panel
                     ])
             ]),
-        #screen1
+        screen1
     ])
 
 
