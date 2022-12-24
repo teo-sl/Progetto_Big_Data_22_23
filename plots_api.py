@@ -7,19 +7,41 @@ from pyspark.sql.functions import *
 from plotly.subplots import make_subplots
 import plotly.offline as py
 
-from spark_api import week_day_month_agg
+from spark_api import matrix_agg, origin_dest_query
+
+week_days_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+states = pd.read_csv("https://raw.githubusercontent.com/jasonong/List-of-US-States/master/states.csv")
 
 
+def matrix_plot(df,x,y,z="count"):
+    df_pd = matrix_agg(df,x,y,z).toPandas()
 
-def week_day_matrix_avg_delay(df):
-    df_pd = week_day_month_agg(df).toPandas()
+
     fig = px.imshow(
-        df_pd.pivot("DayOfWeek", "Month", "AverageArrivalDelay"), 
-        labels=dict(x="Month", y="DayOfWeek", color="Average Arrival Delay"), 
-        x=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
-        y=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        df_pd.pivot(y, x, f"{z}_agg"), 
+        labels=dict(x=x, y=y, color=f"{z}_agg"),
+        y=week_days_names,
+        x= months_names if x=="Month" else df_pd[x].unique().sort(),
     )
-    # add title "Average delay by day of week and month"
-    fig.update_layout(title="Average delay by day of week and month")
+
     return fig
 
+def origin_dest_plot(df,from_date,to_date,query="ArrDelay"):
+    df_pd = origin_dest_query(df,from_date,to_date,query).toPandas()
+
+    fig = px.pie(df_pd.head(20), values=query, names='Origin-Dest', title=f'{query} by Origin-Dest')
+    return fig
+
+
+def origin_dest_plot(df,from_date,to_date,query="ArrDelay"):
+    df_pd = origin_dest_query(df,from_date,to_date,query).toPandas()
+    # make a join over STATE_ORIGIN and Abbreviation in states dataframe, rename the columns
+    df_pd = df_pd.merge(states, left_on="ORIGIN_STATE", right_on="Abbreviation").\
+        rename(columns={"State": "Origin"}).\
+        merge(states, left_on="DEST_STATE", right_on="Abbreviation").\
+        rename(columns={"State": "Dest"})
+    # create a new column with the origin and destination
+    df_pd["Origin-Dest"] = df_pd["Origin"] + " - " + df_pd["Dest"]
+    fig = px.pie(df_pd.head(20), values=query, names='Origin-Dest', title=f'{query} by Origin-Dest')
+    return fig

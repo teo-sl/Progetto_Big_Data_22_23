@@ -1,20 +1,19 @@
-
-import logging
-import os
-import time
-import numpy as np
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
-from plots_api import week_day_matrix_avg_delay
 
-from spark_api import load_dataset
+from plots_api import matrix_plot, origin_dest_plot
 
+from spark_api import get_dates, load_dataset
 
+cache={}
 
 df = load_dataset()
+dates = get_dates(df)
+
+loading_style = {'position': 'absolute', 'align-self': 'center'}
 
 external_stylesheets = [
     'https://codepen.io/mikesmith1611/pen/QOKgpG.css',
@@ -67,25 +66,132 @@ def get_graph(class_name, **kwargs):
         ],
     )
 
-screen1 = html.Div(
-    className='parent',
+# create a div screen containing a plot and a control panel
+plot1 = html.Div(
+    className='plot-container',
     children=[
-        dbc.Row([
-            dbc.Col([get_graph(
-                class_name='div1',
-                figure=week_day_matrix_avg_delay(df),
-                id='map_graph',
-                config=plot_config,
-            )]),
-            dbc.Col([get_graph(
-                class_name='div1',
-                figure=week_day_matrix_avg_delay(df),
-                id='map_graph',
-                config=plot_config,
-            )]),
-        ])
+        # create a dbc.row with a plot and a control panel
+        dbc.Row(
+            [
+                dbc.Col(
+                    get_graph(
+                        'plot',
+                        id='matrix',
+                        config=plot_config,
+                        figure=matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
+                        #layout=default_layout,
+                    ),
+                ),
+                dbc.Col([
+                    html.Div(
+                        className='control-panel',
+                        children=[
+                            html.H4('Select the X axis'),
+                            dcc.RadioItems(
+                                id='x-axis',
+                                options=[
+                                    {'label': 'Departure time block', 'value': 'DepTimeBlk'},
+                                    {'label': 'Month', 'value': 'Month'},
+                                ],
+                                value='Month',
+                            ),
+                            html.H4('Select the Z axis'),
+                            dcc.RadioItems(
+                                id='z-axis',
+                                options=[
+                                    {'label': 'Count', 'value': 'count'},
+                                    {'label': 'Delay', 'value': 'ArrDelay'},
+                                ],
+                                value='count',
+
+                            ),
+                        ],
+                    ),
+                    # add a button to activate the query
+                    html.Div(
+                        className='control-panel',
+                        children=[
+                            html.Button(
+                                'Update',
+                                id='update-plot1',
+                                n_clicks=0,
+                                style={'flex-grow': '1'}
+                            ),
+                            dcc.Loading(id='loading1', parent_style=loading_style)
+                        ],style= {'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                    ),
+                ]),
+            ]
+        )
     ]
 )
+
+
+# create a slider to select the date range
+slider = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='date-range',
+            min=0,
+            max=len(dates) - 1,
+            value=[0, len(dates) - 1],
+            marks={i: dates[i].strftime("%Y-%m-%d") for i in range(0, len(dates), 60)},
+        ),
+    ],
+)
+
+
+# create a div screen containing a plot and the slider
+plot2 = html.Div(
+    className='plot-container',
+    children=[
+        # create a dbc.row with a plot and the slider
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.Div([
+                        get_graph(
+                            'plot',
+                            id='pie-origin-dest',
+                            config=plot_config,
+                            figure=origin_dest_plot(df,dates[0],dates[100],'count'),
+                            #layout=default_layout,
+                        ),
+                        dcc.Loading(id='loading', parent_style=loading_style)
+                    ])
+                ),
+                dbc.Col([slider,
+                    # create a radio button to select count or delay
+                            html.H4('Select the Z axis'),
+                            dcc.RadioItems(
+                                id='z-axis2',
+                                options=[
+                                    {'label': 'Count', 'value': 'count'},
+                                    {'label': 'Delay', 'value': 'ArrDelay'},
+                                ],
+                                value='count',
+                            ),
+                    # add a button to activate the query
+                    html.Div(
+                        className='control-panel',
+                        children=[
+                            html.Button(
+                                'Update',
+                                id='update-plot2',
+                                n_clicks=0,
+                                style={'flex-grow': '1'}
+                            ),
+                            dcc.Loading(id='loading2', parent_style=loading_style)
+                        ],style= {'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                    ),
+                ]),
+            ]
+        )
+    ]
+)
+
 
 header = html.Div(
     className='header',
@@ -160,7 +266,9 @@ app.layout = html.Div(
                         #control_panel
                     ])
             ]),
-        screen1
+        plot1,
+        plot2,
+
     ])
 
 
@@ -175,6 +283,42 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return 
 
+# update the plot when the user selects a different x-axis and z-axis
+@app.callback(
+    [Output('matrix', 'figure'),Output('loading1', 'parent_style')],
+    [State('x-axis', 'value'),
+        State('z-axis', 'value'),
+        Input('update-plot1', 'n_clicks')
+    ])
+def update_graph(x_axis, z_axis,n_clicks):
+    new_loading_style = loading_style
+    key = 'matrix1'+str(x_axis)+str(z_axis)
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = matrix_plot(df, x_axis, 'DayOfWeek', z_axis)
+        cache[key] = ret
+
+    return ret,new_loading_style
+
+# update the plot when the user selects a different z-axis and time range
+@app.callback(
+    [Output('pie-origin-dest', 'figure'),Output('loading2', 'parent_style')],
+    [State('z-axis2', 'value'),
+        State('date-range', 'value'),
+        Input('update-plot2', 'n_clicks')
+    ])
+def update_graph(z_axis, date_range,n_clicks):
+    new_loading_style = loading_style
+    key = 'pie1'+str(z_axis)+str(date_range[0])+str(date_range[1])
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = origin_dest_plot(df, dates[date_range[0]], dates[date_range[1]], z_axis)
+        cache[key] = ret
+    
+    return ret,new_loading_style
+    
 
 # run the app debug mode and 9000 port
 if __name__ == '__main__':
