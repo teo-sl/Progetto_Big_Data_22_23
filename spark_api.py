@@ -30,6 +30,16 @@ def get_dates(df):
     dates = df.select("FlightDate").distinct().orderBy("FlightDate", ascending=True).toPandas()["FlightDate"]
     return dates
 
+# get the unique airports in Origin and Dest
+def get_airports(df):
+    # get the unique airports in Origin
+    airports_origin = df.select("Origin").distinct().orderBy("Origin", ascending=True).toPandas()["Origin"]
+    # get the unique airports in Dest
+    airports_dest = df.select("Dest").distinct().orderBy("Dest", ascending=True).toPandas()["Dest"]
+    # get the unique airports
+    airports = pd.concat([airports_origin, airports_dest]).unique()
+    return airports
+
 
 
 def matrix_agg(df,x,y,z="count",):

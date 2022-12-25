@@ -3,8 +3,9 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
+import pandas as pd
 
-from plots_api import matrix_plot, origin_dest_plot
+from plots_api import matrix_plot, origin_dest_plot, plot_routes
 
 from spark_api import get_dates, load_dataset
 
@@ -12,6 +13,8 @@ cache={}
 
 df = load_dataset()
 dates = get_dates(df)
+airports = pd.read_csv("preprocessing/airports.csv")
+
 
 loading_style = {'position': 'absolute', 'align-self': 'center'}
 
@@ -192,6 +195,88 @@ plot2 = html.Div(
     ]
 )
 
+# create a slider named "slider_map" over the dates
+slider_map = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='date-range-map',
+            min=0,
+            max=len(dates) - 1,
+            value=[0, len(dates) - 1],
+            marks={i: dates[i].strftime("%Y-%m-%d") for i in range(0, len(dates), 60)},
+        ),
+    ],
+)
+
+plot3 = html.Div(
+    className='plot-container',
+    children=[
+        # create a dbc.row with a plot and the slider
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.Div([
+                        get_graph(
+                            'plot',
+                            id='map-routes',
+                            config=plot_config,
+                            figure=plot_routes(df,dates[0],dates[100],origin="BOS",query="NumFlights",scope='airports'),
+                            #layout=default_layout,
+                        ),
+                    ])
+                ),
+                dbc.Col([slider_map,
+                    # create a radio button to select count or delay
+                            html.H4('Select the Z axis'),
+                            dcc.RadioItems(
+                                id='z-axis3',
+                                options=[
+                                    {'label': 'Count', 'value': 'NumFlights'},
+                                    {'label': 'Delay', 'value': 'AverageArrivalDelay'},
+                                ],
+                                value='NumFlights',
+                            ),
+                    # add a dropdown to select the origin from airports
+                    html.H4('Select the origin'),
+                    dcc.Dropdown(
+                        id='origin-map',
+                        options=[{'label': i, 'value': i} for i in airports["IATA"]],
+                        value='BOS',
+                    ),
+
+                    # create a radio button to select the scope from airports or states
+                    html.H4('Select the scope'),
+                    dcc.RadioItems(
+                        id='scope-map',
+                        options=[
+                            {'label': 'Airports', 'value': 'airports'},
+                            {'label': 'States', 'value': 'states'},
+                        ],
+                        value='airports',
+                    ),
+                        
+                    # add a button to activate the query
+                    html.Div(
+                        className='control-panel',
+                        children=[
+                            html.Button(
+                                'Update',
+                                id='update-plot3',
+                                n_clicks=0,
+                                style={'flex-grow': '1'}
+                            ),
+                            dcc.Loading(id='loading3', parent_style=loading_style)
+                        ],style= {'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                    ),
+                ]),
+                
+            ]
+        )
+    ]
+)
+
 
 header = html.Div(
     className='header',
@@ -268,7 +353,7 @@ app.layout = html.Div(
             ]),
         plot1,
         plot2,
-
+        plot3
     ])
 
 
@@ -318,7 +403,26 @@ def update_graph(z_axis, date_range,n_clicks):
         cache[key] = ret
     
     return ret,new_loading_style
-    
+
+# update the plot when the user selects a different origin and scope
+@app.callback(
+    [Output('map-routes', 'figure'),Output('loading3', 'parent_style')],
+    [State('origin-map', 'value'),
+        State('scope-map', 'value'),
+        State('date-range-map', 'value'),
+        State('z-axis3', 'value'),
+        Input('update-plot3', 'n_clicks')
+    ])
+def update_graph(origin, scope, date_range,query,n_clicks):
+    new_loading_style = loading_style
+    key = 'map1'+str(origin)+str(scope)+str(date_range[0])+str(date_range[1])+str(query)
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_routes(df,dates[date_range[0]],dates[date_range[1]],origin,query,scope)
+        cache[key] = ret
+
+    return ret,new_loading_style
 
 # run the app debug mode and 9000 port
 if __name__ == '__main__':

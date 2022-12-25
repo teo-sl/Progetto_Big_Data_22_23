@@ -52,7 +52,6 @@ def origin_dest_plot(df,from_date,to_date,query="ArrDelay"):
 
 def plot_routes(df,date_start,date_to,origin="BOS",query="NumFlights",scope="airports"):
     df_aggregated=routes_queries(df,date_start,date_to,origin,query,scope).toPandas()
-    print(len(df_aggregated))
     if scope == "airports":
         df_aggregated = df_aggregated.merge(airports, left_on="Origin", right_on="IATA")
         df_aggregated = df_aggregated.merge(airports, left_on="Dest", right_on="IATA")
