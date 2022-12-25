@@ -21,7 +21,7 @@ def load_dataset():
     
     df = spark.read.csv("data.nosync/cleaned/cleaned_flights.csv",schema=schema, header=True)
     # sample 10% of the data
-    df = df.sample(False, 0.1, seed=42)
+    #df = df.sample(False, 0.1, seed=42)
 
     return df
 
@@ -89,4 +89,9 @@ def routes_queries(df,date_start,date_end,origin="BOS",query="NumFlights",scope=
 
     # sort by query and take the first 100 rows
     df_aggregated = df_aggregated.orderBy(df_aggregated[query].desc()).limit(100)
+    return df_aggregated
+
+def states_map_query(df,group):
+    df_aggregated = df.groupBy(group).agg({"ArrDelay": "avg", "*":"count"}).withColumnRenamed("avg(ArrDelay)", "ArrDelay")
+    df_aggregated = df_aggregated.withColumnRenamed("count(1)","count")
     return df_aggregated

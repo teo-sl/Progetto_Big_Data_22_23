@@ -7,7 +7,7 @@ from pyspark.sql.functions import *
 from plotly.subplots import make_subplots
 import plotly.offline as py
 
-from spark_api import matrix_agg, origin_dest_query, routes_queries
+from spark_api import matrix_agg, origin_dest_query, routes_queries, states_map_query
 
 week_days_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -120,4 +120,16 @@ def plot_routes(df,date_start,date_to,origin="BOS",query="NumFlights",scope="air
                       showlegend=False,
                       geo= dict(showland = True, landcolor = 'white', countrycolor = 'grey', bgcolor="lightgrey",scope='north america'))
 
+    return fig
+
+def plot_states_map(df,group,query):
+    df_avg = states_map_query(df,group).toPandas()
+    df_avg = df_avg.drop(df_avg[df_avg[group] == "AS"].index)
+    df_avg = df_avg.drop(df_avg[df_avg[group] == "GU"].index)
+    
+    fig = px.choropleth(locations=df_avg[group], locationmode="USA-states", color=df_avg[query], scope="usa")
+
+    # add title "Average delay by state origin"
+    fig.update_layout(title_text=f"{group} : {query}")
+    
     return fig
