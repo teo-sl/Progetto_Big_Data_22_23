@@ -65,3 +65,18 @@ def origin_dest_query(df,from_date,to_date,query="ArrDelay"):
     df = df.orderBy(df[query].desc())
 
     return df
+
+def routes_queries(df,date_start,date_end,origin="BOS",query="NumFlights",scope="airports"):
+    df_aggregated = df.filter((col("Origin") == origin))
+    df_aggregated = df_aggregated.filter((col("FlightDate") >= date_start) & (col("FlightDate") <= date_end))
+    # aggregate by flight date, day of weew, Origin and Dest, count the number of flights and average the arrival delay
+    if scope == "airports":
+        df_aggregated = df_aggregated.groupBy("Origin","Dest","ORIGIN_LATITUDE","ORIGIN_LONGITUDE","DEST_LATITUDE","DEST_LONGITUDE").agg({"ArrDelay": "avg","*":"count"}).withColumnRenamed("avg(ArrDelay)", "AverageArrivalDelay").withColumnRenamed("count(1)", "NumFlights")
+    else:
+        df_aggregated = df_aggregated.groupBy("ORIGIN_STATE","DEST_STATE").agg({"ArrDelay": "avg","*":"count","ORIGIN_LATITUDE":"avg","DEST_LATITUDE":"avg","ORIGIN_LONGITUDE":"avg","DEST_LONGITUDE":"avg"}).withColumnRenamed("avg(ArrDelay)", "AverageArrivalDelay").withColumnRenamed("count(1)", "NumFlights")
+        # rename columns
+        df_aggregated = df_aggregated.withColumnRenamed("avg(ORIGIN_LATITUDE)", "ORIGIN_LATITUDE").withColumnRenamed("avg(ORIGIN_LONGITUDE)", "ORIGIN_LONGITUDE").withColumnRenamed("avg(DEST_LATITUDE)", "DEST_LATITUDE").withColumnRenamed("avg(DEST_LONGITUDE)", "DEST_LONGITUDE")
+
+    # sort by query and take the first 100 rows
+    df_aggregated = df_aggregated.orderBy(df_aggregated[query].desc()).limit(100)
+    return df_aggregated
