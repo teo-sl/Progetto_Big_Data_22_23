@@ -11,9 +11,9 @@ from spark_api import matrix_agg, origin_dest_query, routes_queries, states_map_
 
 week_days_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-states = pd.read_csv("states.csv",delimiter="\t",header=None)
+states = pd.read_csv("util/states.csv",delimiter="\t",header=None)
 states.columns = ["State","unk","Abbreviation"]
-airports = pd.read_csv("preprocessing/airports.csv")
+airports = pd.read_csv("util/airports.csv")
 
 
 def matrix_plot(df,x,y,z="count"):

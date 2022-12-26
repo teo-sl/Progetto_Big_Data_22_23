@@ -13,7 +13,7 @@ cache = {}
 
 df = load_dataset()
 dates = get_dates(df)
-airports = pd.read_csv("preprocessing/airports.csv")
+airports = pd.read_csv("util/airports.csv")
 
 
 loading_style = {'position': 'absolute', 'align-self': 'center'}
