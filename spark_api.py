@@ -15,7 +15,7 @@ spark = SparkSession.builder.appName("flights").getOrCreate()
 
 
 def load_dataset():
-    with open("schema.json","r") as f:
+    with open("util/schema.json","r") as f:
         schema = StructType.fromJson(json.load(f))
     
     
@@ -95,3 +95,20 @@ def states_map_query(df,group):
     df_aggregated = df.groupBy(group).agg({"ArrDelay": "avg", "*":"count"}).withColumnRenamed("avg(ArrDelay)", "ArrDelay")
     df_aggregated = df_aggregated.withColumnRenamed("count(1)","count")
     return df_aggregated
+
+def reporting_airlines_queries(df,from_date,to_date,query="count"):
+    # get the tuples in between the dates
+    df = df.filter(df["FlightDate"].between(from_date,to_date))
+
+    if query == "count":
+        df_agg = df.groupBy("Reporting_Airline").\
+            agg({"*": "count"}).\
+            withColumnRenamed("count(1)", "count").\
+            orderBy("count", ascending=False)
+    else:
+        df_agg=df.groupBy("Reporting_Airline").\
+            agg({"ArrDelay": "avg"}).\
+            withColumnRenamed("avg(ArrDelay)", "ArrDelay").\
+            orderBy("ArrDelay", ascending=False)        
+    
+    return df_agg

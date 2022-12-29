@@ -5,7 +5,7 @@ from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 
-from plots_api import matrix_plot, origin_dest_plot, plot_routes, plot_states_map
+from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_states_map
 
 from spark_api import get_dates, load_dataset
 
@@ -98,6 +98,9 @@ plot1 = html.Div(
                                 ],
                                 value='Month',
                             ),
+
+                            html.Br(),
+
                             html.H4('Select the Z axis'),
                             dcc.RadioItems(
                                 id='z-axis-1',
@@ -110,6 +113,7 @@ plot1 = html.Div(
                             ),
                         ],
                     ),
+                    html.Br(),
                     html.Div(
                         className='control-panel',
                         children=[
@@ -167,7 +171,9 @@ plot2 = html.Div(
                         dcc.Loading(id='loading', parent_style=loading_style)
                     ])
                 ),
-                dbc.Col([slider,
+                dbc.Col([
+                         slider,
+                         html.Br(),
                          # create a radio button to select count or delay
                          html.H4('Select the Z axis'),
                          dcc.RadioItems(
@@ -179,6 +185,8 @@ plot2 = html.Div(
                              value='count',
                          ),
                          #  add a button to activate the query
+                         html.Br(),
+
                          html.Div(
                              className='control-panel',
                              children=[
@@ -232,7 +240,10 @@ plot3 = html.Div(
                         ),
                     ])
                 ),
-                dbc.Col([slider_map,
+                dbc.Col([
+                         html.H2('Map of routes by average delay or number of flights'),
+                         html.Br(),
+                         slider_map,
                          # create a radio button to select count or delay
                          html.H4('Select the Z axis'),
                          dcc.RadioItems(
@@ -243,15 +254,16 @@ plot3 = html.Div(
                              ],
                              value='NumFlights',
                          ),
+                         html.Br(),
                          # add a dropdown to select the origin from airports
                          html.H4('Select the origin'),
                          dcc.Dropdown(
                              id='origin-map-routes',
-                             options=[{'label': i, 'value': i}
-                                      for i in airports["IATA"]],
+                             options=[{'label': airports["AIRPORT"][i], 'value': airports["IATA"][i]}
+                                      for i in range(len(airports["IATA"]))],
                              value='BOS',
                          ),
-
+                        html.Br(),
                          # create a radio button to select the scope from airports or states
                          html.H4('Select the scope'),
                          dcc.RadioItems(
@@ -262,6 +274,7 @@ plot3 = html.Div(
                              ],
                              value='airports',
                          ),
+                         html.Br(),
 
                          #  add a button to activate the query
                          html.Div(
@@ -306,6 +319,7 @@ plot4 = html.Div(
                     ],
                     value='ORIGIN_STATE',
                 ),
+                html.Br(),
                 html.H4('Select the type of query'),
                 dcc.RadioItems(
                     id='query-state',
@@ -315,6 +329,7 @@ plot4 = html.Div(
                     ],
                     value='count',
                 ),
+                html.Br(),
                 html.Div(
                     className='control-panel',
                     children=[
@@ -333,7 +348,68 @@ plot4 = html.Div(
     ]
 )
 
-header = html.Div(
+slider_airlines = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='slider-4',
+            min=0,
+            max=len(dates) - 1,
+            value=[0, len(dates) - 1],
+            marks={i: dates[i].strftime("%Y-%m-%d")
+                   for i in range(0, len(dates), 60)},
+        ),
+    ],
+)
+
+
+plot5 = html.Div(
+    className='plot-container',
+    children=[
+        dbc.Row([
+            dbc.Col(
+                get_graph(
+                    'plot',
+                    id='plot-airline',
+                    config=plot_config,
+                    figure=plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
+                    # layout=default_layout,
+                ),
+            ),
+            dbc.Col([
+                slider_airlines,
+                html.Br(),
+                html.H4('Select the type of query'),
+                
+                dcc.RadioItems(
+                    id='query-airlines',
+                    options=[
+                        {'label': 'Count', 'value': 'count'},
+                        {'label': 'Delay', 'value': 'avg'},
+                    ],
+                    value='count',
+                ),
+                html.Br(),
+                html.Div(
+                    className='control-panel',
+                    children=[
+                        html.Button(
+                            'Update',
+                            id='button-airlines',
+                            n_clicks=0,
+                            style={'flex-grow': '1'}
+                        ),
+                        dcc.Loading(id='load-airlines',
+                                    parent_style=loading_style)
+                    ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                ),
+            ]),
+        ])
+    ]
+)
+
+header = html.Header(
     className='header',
     children=[
         html.Div(
@@ -410,6 +486,7 @@ app.layout = html.Div(
         plot2,
         plot3,
         plot4,
+        plot5,
     ])
 
 
@@ -505,6 +582,23 @@ def update_graph(orig_dest,query,n_clicks):
         cache[key] = ret
 
     return ret, new_loading_style
+
+@app.callback(
+    [Output('plot-airline','figure'),Output('load-airlines','parent_style')],
+    [State('query-airlines','value'),
+    State('slider-4','value'),
+    Input('button-airlines','n_clicks')]
+)
+def update_graph(query,date_range,n_clicks):
+    new_loading_style = loading_style
+    key = 'airline1'+str(query)+str(date_range[0])+str(date_range[1])
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_reporting_airlines(df,dates[date_range[0]],dates[date_range[1]],query)
+        cache[key] = ret
+    return ret, new_loading_style
+
 
 
 # run the app debug mode and 9000 port
