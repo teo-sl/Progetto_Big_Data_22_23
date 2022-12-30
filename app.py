@@ -523,11 +523,23 @@ about_app = html.Div(
 
 
 modal = html.Div(
-    [
+    # put in the center of the page
+    children=[
         dbc.Button(
             'About the Dashboard',
             id='open_modal',
-            color='link'
+            # make the button white
+            color='link',
+            style={
+             'background-color': 'blue',
+              'color': 'white',
+              'border': '0px',
+              'font-weight': 'bold',
+              'hover': { 
+                     'color': '#ffffff'
+              }
+            }
+
         ),
         dbc.Modal(
             [
@@ -560,22 +572,30 @@ cache_saver = html.Div(
         )
     ]
 )
-
+# define an header 
 
 app.layout = html.Div(
     className='flight-container',
     children=[
-        html.Div(
+        html.Header(
             className='header',
+            # make the header purple
+            style={'background-color': '#4d004b'},
+
             children=[
                 html.Div(
+                    # make the title white and add margin
+                    style={'color': 'white', 'margin-left': '10px'},
                     className='title',
                     children=[
-                        html.H4('Flight data'),
+                        html.H1('Flight data'),
+                        html.H2('Visualizing flight data from the US'),
                     ]
                 ),
                 html.Div(
                     className='header',
+                    # put the children in the center of the header
+                    style={'display': 'flex', 'justify-content': 'center'},
                     children=[
                         modal,
                         # control_panel
