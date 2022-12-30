@@ -74,63 +74,61 @@ def get_graph(class_name, **kwargs):
 # create a div screen containing a plot and a control panel
 plot1 = html.Div(
     className='plot-container',
+    
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    
     children=[
-        dbc.Row(
-            [
-                dbc.Col(
-                    get_graph(
-                        'plot',
-                        id='matrix',
-                        config=plot_config,
-                        figure={}#matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
-                    ),
-                ),
-                dbc.Col([
-                    html.Div(
-                        className='control-panel',
-                        children=[
-                            html.H4('Select the X axis'),
-                            dcc.RadioItems(
-                                id='x-axis-1',
-                                options=[
-                                    {'label': 'Departure time block',
-                                        'value': 'DepTimeBlk'},
-                                    {'label': 'Month', 'value': 'Month'},
-                                ],
-                                value='Month',
-                            ),
-
-                            html.Br(),
-
-                            html.H4('Select the Z axis'),
-                            dcc.RadioItems(
-                                id='z-axis-1',
-                                options=[
-                                    {'label': 'Count', 'value': 'count'},
-                                    {'label': 'Delay', 'value': 'ArrDelay'},
-                                ],
-                                value='count',
-
-                            ),
+        html.H2('Heatmap widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                className='control-panel',
+                children=[
+                    html.H4('Select the X axis'),
+                    dcc.RadioItems(
+                        id='x-axis-1',
+                        options=[
+                            {'label': 'Departure time block',
+                                'value': 'DepTimeBlk'},
+                            {'label': 'Month', 'value': 'Month'},
                         ],
+                        value='Month',
                     ),
                     html.Br(),
-                    html.Div(
-                        className='control-panel',
-                        children=[
-                            html.Button(
-                                'Update',
-                                id='update-button-1',
-                                n_clicks=0,
-                                style={'flex-grow': '1'}
-                            ),
-                            dcc.Loading(id='loading-1',
-                                        parent_style=loading_style)
-                        ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                    html.H4('Select the Z axis'),
+                    dcc.RadioItems(
+                        id='z-axis-1',
+                        options=[
+                            {'label': 'Count', 'value': 'count'},
+                            {'label': 'Delay', 'value': 'ArrDelay'},
+                        ],
+                        value='count',
                     ),
-                ]),
+                ],
+            ),
+            html.Br(),
+            html.Div(
+                className='control-panel',
+                children=[
+                    html.Button(
+                        'Update',
+                        id='update-button-1',
+                        n_clicks=0,
+                        style={'flex-grow': '1'}
+                    ),
+                    dcc.Loading(id='loading-1',
+                                parent_style=loading_style)
+                ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                ),
             ]
-        )
+        ),
+        dbc.Row(
+            get_graph(
+                'plot',
+                id='matrix',
+                config=plot_config,
+                figure={}#matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
+            ),
+        ),
     ]
 )
 
@@ -155,54 +153,51 @@ slider = html.Div(
 # create a div screen containing a plot and the slider
 plot2 = html.Div(
     className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        # create a dbc.row with a plot and the slider
-        dbc.Row(
-            [
-                dbc.Col(
-                    html.Div([
-                        get_graph(
-                            'plot',
-                            id='pie-routes',
-                            config=plot_config,
-                            figure={}#origin_dest_plot(df, dates[0], dates[100], 'count'),
-                            # layout=default_layout,
-                        ),
-                        dcc.Loading(id='loading', parent_style=loading_style)
-                    ])
-                ),
-                dbc.Col([
-                         slider,
-                         html.Br(),
-                         # create a radio button to select count or delay
-                         html.H4('Select the Z axis'),
-                         dcc.RadioItems(
-                             id='query-pie',
-                             options=[
-                                 {'label': 'Count', 'value': 'count'},
-                                 {'label': 'Delay', 'value': 'ArrDelay'},
-                             ],
-                             value='count',
+        html.H2('Pie widget',style={'text-align': 'center'}),
+        dbc.Row([
+                 slider,
+                 html.Br(),
+                 # create a radio button to select count or delay
+                 html.H4('Select the Z axis'),
+                 dcc.RadioItems(
+                     id='query-pie',
+                     options=[
+                         {'label': 'Count', 'value': 'count'},
+                         {'label': 'Delay', 'value': 'ArrDelay'},
+                     ],
+                     value='count',
+                 ),
+                 #  add a button to activate the query
+                 html.Br(),
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-pie',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
                          ),
-                         #  add a button to activate the query
-                         html.Br(),
+                         dcc.Loading(id='load-pie',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
 
-                         html.Div(
-                             className='control-panel',
-                             children=[
-                                 html.Button(
-                                     'Update',
-                                     id='button-pie',
-                                     n_clicks=0,
-                                     style={'flex-grow': '1'}
-                                 ),
-                                 dcc.Loading(id='load-pie',
-                                             parent_style=loading_style)
-                             ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
-                         ),
-                         ]),
-            ]
-        )
+            dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='pie-routes',
+                        config=plot_config,
+                        figure={}#origin_dest_plot(df, dates[0], dates[100], 'count'),
+                        # layout=default_layout,
+                    ),
+                    dcc.Loading(id='loading', parent_style=loading_style)
+                ])
+            ),
     ]
 )
 
@@ -224,11 +219,60 @@ slider_map = html.Div(
 
 plot3 = html.Div(
     className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
         # create a dbc.row with a plot and the slider
-        dbc.Row(
-            [
-                dbc.Col(
+            dbc.Row([
+                 html.H2('Map of routes by average delay or number of flights',style={'text-align': 'center'}),
+                 html.Br(),
+                 slider_map,
+                 # create a radio button to select count or delay
+                 html.H4('Select the Z axis'),
+                 dcc.RadioItems(
+                     id='query-map-routes',
+                     options=[
+                         {'label': 'Count', 'value': 'NumFlights'},
+                         {'label': 'Delay', 'value': 'AverageArrivalDelay'},
+                     ],
+                     value='NumFlights',
+                 ),
+                 html.Br(),
+                 # add a dropdown to select the origin from airports
+                 html.H4('Select the origin'),
+                 dcc.Dropdown(
+                     id='origin-map-routes',
+                     options=[{'label': airports["AIRPORT"][i], 'value': airports["IATA"][i]}
+                              for i in range(len(airports["IATA"]))],
+                     value='BOS',
+                 ),
+                html.Br(),
+                 # create a radio button to select the scope from airports or states
+                 html.H4('Select the scope'),
+                 dcc.RadioItems(
+                     id='air-state-map-routes',
+                     options=[
+                         {'label': 'Airports', 'value': 'airports'},
+                         {'label': 'States', 'value': 'states'},
+                     ],
+                     value='airports',
+                 ),
+                 html.Br(),
+                 #  add a button to activate the query
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-map-routes',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='load-map-routes',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+            dbc.Row(
                     html.Div([
                         get_graph(
                             'plot',
@@ -238,68 +282,51 @@ plot3 = html.Div(
                             # layout=default_layout,
                         ),
                     ])
-                ),
-                dbc.Col([
-                         html.H2('Map of routes by average delay or number of flights'),
-                         html.Br(),
-                         slider_map,
-                         # create a radio button to select count or delay
-                         html.H4('Select the Z axis'),
-                         dcc.RadioItems(
-                             id='query-map-routes',
-                             options=[
-                                 {'label': 'Count', 'value': 'NumFlights'},
-                                 {'label': 'Delay', 'value': 'AverageArrivalDelay'},
-                             ],
-                             value='NumFlights',
-                         ),
-                         html.Br(),
-                         # add a dropdown to select the origin from airports
-                         html.H4('Select the origin'),
-                         dcc.Dropdown(
-                             id='origin-map-routes',
-                             options=[{'label': airports["AIRPORT"][i], 'value': airports["IATA"][i]}
-                                      for i in range(len(airports["IATA"]))],
-                             value='BOS',
-                         ),
-                        html.Br(),
-                         # create a radio button to select the scope from airports or states
-                         html.H4('Select the scope'),
-                         dcc.RadioItems(
-                             id='air-state-map-routes',
-                             options=[
-                                 {'label': 'Airports', 'value': 'airports'},
-                                 {'label': 'States', 'value': 'states'},
-                             ],
-                             value='airports',
-                         ),
-                         html.Br(),
-
-                         #  add a button to activate the query
-                         html.Div(
-                             className='control-panel',
-                             children=[
-                                 html.Button(
-                                     'Update',
-                                     id='button-map-routes',
-                                     n_clicks=0,
-                                     style={'flex-grow': '1'}
-                                 ),
-                                 dcc.Loading(id='load-map-routes',
-                                             parent_style=loading_style)
-                             ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
-                         ),
-                         ]),
-            ]
-        )
+            ),
     ]
 )
 
 plot4 = html.Div(
     className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
+        html.H2('Map of airports by average delay or number of flights',style={'text-align': 'center'}),
         dbc.Row([
-            dbc.Col(
+            html.H4('Select from origin or destination'),
+            dcc.RadioItems(
+                id='orig-dest-selector',
+                options=[
+                    {'label': 'Origin', 'value': 'ORIGIN_STATE'},
+                    {'label': 'Destination', 'value': 'DEST_STATE'},
+                ],
+                value='ORIGIN_STATE',
+            ),
+            html.Br(),
+            html.H4('Select the type of query'),
+            dcc.RadioItems(
+                id='query-state',
+                options=[
+                    {'label': 'Count', 'value': 'count'},
+                    {'label': 'Delay', 'value': 'ArrDelay'},
+                ],
+                value='count',
+            ),
+            html.Br(),
+            html.Div(
+                className='control-panel',
+                children=[
+                    html.Button(
+                        'Update',
+                        id='button-state',
+                        n_clicks=0,
+                        style={'flex-grow': '1'}
+                    ),
+                    dcc.Loading(id='load-state',
+                                parent_style=loading_style)
+                ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+            ),
+        ]),
+        dbc.Row(
                 get_graph(
                     'plot',
                     id='plot-state',
@@ -307,43 +334,7 @@ plot4 = html.Div(
                     figure={}#lot_states_map(df, "ORIGIN_STATE", "count"),
                     # layout=default_layout,
                 ),
-            ),
-            dbc.Col([
-                html.H4('Select from origin or destination'),
-                dcc.RadioItems(
-                    id='orig-dest-selector',
-                    options=[
-                        {'label': 'Origin', 'value': 'ORIGIN_STATE'},
-                        {'label': 'Destination', 'value': 'DEST_STATE'},
-                    ],
-                    value='ORIGIN_STATE',
-                ),
-                html.Br(),
-                html.H4('Select the type of query'),
-                dcc.RadioItems(
-                    id='query-state',
-                    options=[
-                        {'label': 'Count', 'value': 'count'},
-                        {'label': 'Delay', 'value': 'ArrDelay'},
-                    ],
-                    value='count',
-                ),
-                html.Br(),
-                html.Div(
-                    className='control-panel',
-                    children=[
-                        html.Button(
-                            'Update',
-                            id='button-state',
-                            n_clicks=0,
-                            style={'flex-grow': '1'}
-                        ),
-                        dcc.Loading(id='load-state',
-                                    parent_style=loading_style)
-                    ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
-                ),
-            ]),
-        ])
+        ),
     ]
 )
 
@@ -365,18 +356,10 @@ slider_airlines = html.Div(
 
 plot5 = html.Div(
     className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        dbc.Row([
-            dbc.Col(
-                get_graph(
-                    'plot',
-                    id='plot-airline',
-                    config=plot_config,
-                    figure={}#plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
-                    # layout=default_layout,
-                ),
-            ),
-            dbc.Col([
+            html.H2('Flights per airline',style={'text-align': 'center'}),
+            dbc.Row([
                 slider_airlines,
                 html.Br(),
                 html.H4('Select the type of query'),
@@ -403,7 +386,16 @@ plot5 = html.Div(
                                     parent_style=loading_style)
                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
                 ),
-            ]),
+            dbc.Row(
+                get_graph(
+                    'plot',
+                    id='plot-airline',
+                    config=plot_config,
+                    figure={}#plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
+                    # layout=default_layout,
+                ),
+            ),
+                
         ])
     ]
 )
@@ -436,18 +428,10 @@ option_scatter = [{"label" : "Arrival delay", "value" : "ArrDelay"},
 
 plot6 = html.Div(
     className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        dbc.Row([
-            dbc.Col(
-                get_graph(
-                    'plot',
-                    id='plot-scatter',
-                    config=plot_config,
-                    figure={}#plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
-                    # layout=default_layout,
-                ),
-            ),
-            dbc.Col([
+            html.H2('Scatter widget',style={'text-align': 'center'}),
+            dbc.Row([
                 html.H4('Select the time granularity'),
                 dcc.RadioItems(
                     id='radio-scatter',
@@ -458,9 +442,7 @@ plot6 = html.Div(
                     ],
                     value = 'FlightDate'
                 ),
-
                 html.Br(),
-                
                 html.H4('Select the x axis'),
                 dcc.Dropdown(
                     id = 'x-scatter',
@@ -498,7 +480,15 @@ plot6 = html.Div(
                                     parent_style=loading_style)
                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
                 ),
-            ]),
+            dbc.Row(
+                get_graph(
+                    'plot',
+                    id='plot-scatter',
+                    config=plot_config,
+                    figure={}#plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
+                    # layout=default_layout,
+                ),
+            ),
         ])
     ]
 )
@@ -593,11 +583,29 @@ app.layout = html.Div(
             ]),
         cache_saver,
 
+        # add a black line to separate the components
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot1,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot2,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot3,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot4,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot5,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
         plot6,
     ])
 
