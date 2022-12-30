@@ -9,6 +9,13 @@ import pickle
 spark = SparkSession.builder.appName("flights").getOrCreate()
 
 
+def load_cache():
+    # check if util/cache.pkl exists
+    try:
+        cache = pickle.load(open("util/cache.pkl","rb"))
+    except:
+        cache = {}
+    return cache
 
 def load_dataset():
     with open("util/schema.json","r") as f:

@@ -4,13 +4,14 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
+import os
+import pickle
 
 from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_scatter, plot_states_map
 
-from spark_api import get_dates, load_dataset
+from spark_api import get_dates, load_cache, load_dataset
 
-cache = {}
-
+cache = load_cache()
 df = load_dataset()
 dates = get_dates()
 airports = pd.read_csv("util/airports.csv")
@@ -530,6 +531,7 @@ about_app = html.Div(
     ]
 )
 
+
 modal = html.Div(
     [
         dbc.Button(
@@ -557,6 +559,18 @@ modal = html.Div(
     ]
 )
 
+cache_saver = html.Div(
+    id='cache-saver',
+    style={'display': 'none'},
+    children=[
+        dcc.Interval(id='chache-timeout',interval=10*1000,n_intervals=0),
+        html.Div(
+            id='placeholder',
+            children=[]
+        )
+    ]
+)
+
 
 app.layout = html.Div(
     className='flight-container',
@@ -577,6 +591,8 @@ app.layout = html.Div(
                         # control_panel
                     ])
             ]),
+        cache_saver,
+
         plot1,
         plot2,
         plot3,
@@ -585,6 +601,14 @@ app.layout = html.Div(
         plot6,
     ])
 
+@app.callback(
+    Output('placeholder','children'),
+    (Input('chache-timeout','n_intervals')),
+)
+def cache_save(n_intervals):
+    os.remove('util/cache.pkl')
+    pickle.dump(cache,open('util/cache.pkl','wb'))
+    return []
 
 @app.callback(
     Output('modal', 'is_open'),
