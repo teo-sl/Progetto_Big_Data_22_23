@@ -5,14 +5,14 @@ from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 
-from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_states_map
+from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_scatter, plot_states_map
 
 from spark_api import get_dates, load_dataset
 
 cache = {}
 
 df = load_dataset()
-dates = get_dates(df)
+dates = get_dates()
 airports = pd.read_csv("util/airports.csv")
 
 
@@ -235,7 +235,7 @@ plot3 = html.Div(
                             id='map-routes',
                             config=plot_config,
                             figure=plot_routes(
-                                df, dates[0], dates[100], origin="BOS", query="NumFlights", scope='airports'),
+                                df, dates[0], dates[len(dates)-1], origin="BOS", query="NumFlights", scope='airports'),
                             # layout=default_layout,
                         ),
                     ])
@@ -426,6 +426,103 @@ header = html.Header(
     ],
 )
 
+option_scatter = [{"label" : "Arrival delay", "value" : "ArrDelay"},
+                {"label":"Departure delay" ,"value" :"DepDelay"},
+                {"label":"Number of flights" ,"value" :"count"},
+                {"label": "Taxi in time","value" :"TaxiIn"},
+                {"label": "Taxi out time","value" :"TaxiOut"},
+                {"label": "Air time","value" :"AirTime"},
+                {"label": "Distance","value" :"distance"}
+            ]
+
+plot6 = html.Div(
+    className='plot-container',
+    children=[
+        dbc.Row([
+            dbc.Col(
+                get_graph(
+                    'plot',
+                    id='plot-scatter',
+                    config=plot_config,
+                    figure=plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
+                    # layout=default_layout,
+                ),
+            ),
+            dbc.Col([
+                html.H4('Select the time granularity'),
+                dcc.RadioItems(
+                    id='radio-scatter',
+                    options=[
+                        {'label':'By day','value':'FlightDate'},
+                        {'label':'By month','value':'Month'},
+                        {'label':'By day of week','value':'DayOfWeek'}
+                    ],
+                    value = 'FlightDate'
+                ),
+
+                html.Br(),
+                
+                html.H4('Select the x axis'),
+                dcc.Dropdown(
+                    id = 'x-scatter',
+                    options = option_scatter,
+                    value="ArrDelay",
+                    clearable=False
+                ),
+                html.Br(),
+                html.H4('Select the y axis'),
+                dcc.Dropdown(
+                    id = 'y-scatter',
+                    options = option_scatter,
+                    value="DepDelay",
+                    clearable=False
+                ),
+                html.Br(),
+                html.H4('Select the z axis'),
+                dcc.Dropdown(
+                    id = 'z-scatter',
+                    options = option_scatter,
+                    value="count",
+                    clearable=False
+                ),
+                html.Br(),
+                html.Div(
+                    className='control-panel',
+                    children=[
+                        html.Button(
+                            'Update',
+                            id='button-scatter',
+                            n_clicks=0,
+                            style={'flex-grow': '1'}
+                        ),
+                        dcc.Loading(id='load-scatter',
+                                    parent_style=loading_style)
+                    ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                ),
+            ]),
+        ])
+    ]
+)
+
+header = html.Header(
+    className='header',
+    children=[
+        html.Div(
+            className='header-title',
+            children=[
+                html.H1('Flight data'),
+                html.H2('Visualizing flight data from the US'),
+            ],
+        ),
+        html.Img(
+            className='header-logo',
+            src=app.get_asset_url('./dash-logo.png'),
+        ),
+    ],
+)
+
+
+
 about_app = html.Div(
     children=[
         html.H2('About the Dashboard'),
@@ -487,6 +584,7 @@ app.layout = html.Div(
         plot3,
         plot4,
         plot5,
+        plot6,
     ])
 
 
@@ -599,6 +697,25 @@ def update_graph(query,date_range,n_clicks):
         cache[key] = ret
     return ret, new_loading_style
 
+@app.callback(
+    [Output('plot-scatter','figure'),Output('load-scatter','parent_style')],
+    [
+        State('radio-scatter','value'),
+        State('x-scatter','value'),
+        State('y-scatter','value'),
+        State('z-scatter','value'),
+        Input('button-scatter','n_clicks')
+    ]
+)
+def update_graph(time,x,y,z,n_clicks):
+    new_loading_style = loading_style
+    key = 'scatter1'+str(time)+str(x)+str(y)+str(z)
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_scatter(df,time,x,y,z)
+        cache[key]=ret
+    return ret,new_loading_style
 
 
 # run the app debug mode and 9000 port

@@ -1,13 +1,9 @@
-import plotly.express as px
-import plotly.graph_objs as go
 import pandas as pd
-import numpy as np
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from plotly.subplots import make_subplots
-import plotly.offline as py
 import json
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, DateType, TimestampType
+from pyspark.sql.types import StructType
+import pickle
 
 
 spark = SparkSession.builder.appName("flights").getOrCreate()
@@ -26,8 +22,8 @@ def load_dataset():
     return df
 
 # get the unique dates
-def get_dates(df):
-    dates = df.select("FlightDate").distinct().orderBy("FlightDate", ascending=True).toPandas()["FlightDate"]
+def get_dates():
+    dates = pickle.load(open("util/dates.pkl","rb"))
     return dates
 
 # get the unique airports in Origin and Dest
@@ -111,4 +107,17 @@ def reporting_airlines_queries(df,from_date,to_date,query="count"):
             withColumnRenamed("avg(ArrDelay)", "ArrDelay").\
             orderBy("ArrDelay", ascending=False)        
     
+    return df_agg
+
+def scatter_queries(df,temp_granularity):
+    df_agg =(df.groupBy(temp_granularity).\
+    agg({"ArrDelay": "avg","TaxiIn":"avg","TaxiOut":"avg","DepDelay":"avg","DepTime":"avg",
+        "ArrTime":"avg","AirTime":"avg","Distance":"avg","*":"count"}).\
+        withColumnRenamed("count(1)", "count").\
+        withColumnRenamed("avg(ArrDelay)", "ArrDelay").\
+        withColumnRenamed("avg(TaxiIn)", "TaxiIn").\
+        withColumnRenamed("avg(TaxiOut)", "TaxiOut").\
+        withColumnRenamed("avg(DepDelay)", "DepDelay").\
+        withColumnRenamed("avg(AirTime)", "AirTime").\
+        withColumnRenamed("avg(Distance)", "Distance"))
     return df_agg

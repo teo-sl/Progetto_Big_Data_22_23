@@ -7,7 +7,7 @@ from pyspark.sql.functions import *
 from plotly.subplots import make_subplots
 import plotly.offline as py
 
-from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, states_map_query
+from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, scatter_queries, states_map_query
 
 week_days_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -145,5 +145,20 @@ def plot_reporting_airlines(df,from_date,to_date,query="count"):
     y = "ArrDelay" if query == "avg" else "count"
     fig = px.bar(df_agg, x="Name", y=y, color="Name")
     # add a title
+    fig.update_layout(title_text=title)
+    return fig
+
+def plot_scatter(df,temp_granularity,x,y,z):
+    df_pd = scatter_queries(df,temp_granularity).toPandas()
+    fig = px.scatter(df_pd, x=x, y=y,color=z,hover_data=[temp_granularity])
+    dict = {"ArrDelay" : " the average arrival delay ", 
+            "DepDelay" : " the average departure delay ",
+            "count" : " the number of flights ",
+            "TaxiIn" : " the average taxi in time ",
+            "TaxiOut" : " the average taxi out time ",
+            "AirTime" : " the average air time ",
+            "distance" : " the average distance "
+    }
+    title = f"Scatter plot with {dict[x]} on the x-axis, {dict[y]} on the y-axis and {dict[z]} as the colormap."
     fig.update_layout(title_text=title)
     return fig
