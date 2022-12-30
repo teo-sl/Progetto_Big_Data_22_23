@@ -1,11 +1,7 @@
 import plotly.express as px
 import plotly.graph_objs as go
 import pandas as pd
-import numpy as np
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-from plotly.subplots import make_subplots
-import plotly.offline as py
 
 from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, scatter_queries, states_map_query
 
@@ -15,6 +11,7 @@ states = pd.read_csv("util/states.csv",delimiter="\t",header=None)
 states.columns = ["State","unk","Abbreviation"]
 airports = pd.read_csv("util/airports.csv")
 airlines = pd.read_csv("util/airlines.csv")
+cancellations = pd.read_csv("util/cancellations.csv")
 
 
 def matrix_plot(df,x,y,z="count"):
@@ -138,11 +135,28 @@ def plot_states_map(df,group,query):
 
 
 def plot_reporting_airlines(df,from_date,to_date,query="count"):
-    df_agg = reporting_airlines_queries(df,from_date,to_date,query).toPandas()
-    df_agg = df_agg.merge(airlines, left_on="Reporting_Airline", right_on="IATA")
-    title = "Number of flights by reporting airline" if query=="count" else "Average arrival delay by reporting airline"
+    if query == "Cancelled":
+        df_agg = cancellations.merge(airlines,left_on="Reporting_Airline",right_on="IATA")
+        df_agg = df_agg.sort_values(by="Cancelled",ascending=False)
+    else:
+        df_agg = reporting_airlines_queries(df,from_date,to_date,query).toPandas()
+        df_agg = df_agg.merge(airlines, left_on="Reporting_Airline", right_on="IATA")
+
+    if query=="count":
+        title = "Number of flights by reporting airline"
+    elif query=="avg":
+        title = "Average arrival delay by reporting airline"
+    else:
+        title = "Number of cancelled flights by reporting airline"
     # plot the data as a bar chart, colored by the carrier
-    y = "ArrDelay" if query == "avg" else "count"
+    if query == "avg":
+        y = "ArrDelay"
+    elif query == "count":
+        y = "count"
+    else:
+        y = "Cancelled"
+    
+
     fig = px.bar(df_agg, x="Name", y=y, color="Name")
     # add a title
     fig.update_layout(title_text=title)

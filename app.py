@@ -369,6 +369,7 @@ plot5 = html.Div(
                     options=[
                         {'label': 'Count', 'value': 'count'},
                         {'label': 'Delay', 'value': 'avg'},
+                        {'label': 'Cancelled', 'value': 'Cancelled'}
                     ],
                     value='count',
                 ),
@@ -738,8 +739,9 @@ def update_graph(orig_dest,query,n_clicks):
     Input('button-airlines','n_clicks')]
 )
 def update_graph(query,date_range,n_clicks):
+    
     new_loading_style = loading_style
-    key = 'airline1'+str(query)+str(date_range[0])+str(date_range[1])
+    key = 'airline1'+str(query)+str(date_range[0])+str(date_range[1])        
     if key in cache:
         ret = cache[key]
     else:

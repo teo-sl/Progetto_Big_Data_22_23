@@ -108,6 +108,11 @@ def reporting_airlines_queries(df,from_date,to_date,query="count"):
             agg({"*": "count"}).\
             withColumnRenamed("count(1)", "count").\
             orderBy("count", ascending=False)
+    elif query == "Cancelled":
+        df_agg = df.groupBy("Reporting_Airline").\
+            agg({"Cancelled": "sum"}).\
+            withColumnRenamed("sum(Cancelled)", "Cancelled").\
+            orderBy("Cancelled", ascending=False)
     else:
         df_agg=df.groupBy("Reporting_Airline").\
             agg({"ArrDelay": "avg"}).\
