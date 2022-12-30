@@ -81,7 +81,7 @@ plot1 = html.Div(
                         'plot',
                         id='matrix',
                         config=plot_config,
-                        figure=matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
+                        figure={}#matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
                     ),
                 ),
                 dbc.Col([
@@ -164,8 +164,7 @@ plot2 = html.Div(
                             'plot',
                             id='pie-routes',
                             config=plot_config,
-                            figure=origin_dest_plot(
-                                df, dates[0], dates[100], 'count'),
+                            figure={}#origin_dest_plot(df, dates[0], dates[100], 'count'),
                             # layout=default_layout,
                         ),
                         dcc.Loading(id='loading', parent_style=loading_style)
@@ -234,8 +233,7 @@ plot3 = html.Div(
                             'plot',
                             id='map-routes',
                             config=plot_config,
-                            figure=plot_routes(
-                                df, dates[0], dates[len(dates)-1], origin="BOS", query="NumFlights", scope='airports'),
+                            figure={}#plot_routes(df, dates[0], dates[len(dates)-1], origin="BOS", query="NumFlights", scope='airports'),
                             # layout=default_layout,
                         ),
                     ])
@@ -305,7 +303,7 @@ plot4 = html.Div(
                     'plot',
                     id='plot-state',
                     config=plot_config,
-                    figure=plot_states_map(df, "ORIGIN_STATE", "count"),
+                    figure={}#lot_states_map(df, "ORIGIN_STATE", "count"),
                     # layout=default_layout,
                 ),
             ),
@@ -373,7 +371,7 @@ plot5 = html.Div(
                     'plot',
                     id='plot-airline',
                     config=plot_config,
-                    figure=plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
+                    figure={}#plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
                     # layout=default_layout,
                 ),
             ),
@@ -444,7 +442,7 @@ plot6 = html.Div(
                     'plot',
                     id='plot-scatter',
                     config=plot_config,
-                    figure=plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
+                    figure={}#plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
                     # layout=default_layout,
                 ),
             ),
