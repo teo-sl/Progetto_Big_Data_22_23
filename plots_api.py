@@ -112,10 +112,25 @@ def plot_routes(df,date_start,date_to,origin="BOS",query="NumFlights",scope="air
 
     ## Update graph layout to improve graph styling.
     fig.update_layout(title_text="",
-                      height=700, width=900,
+                      #height=700, width=900,
                       margin={"t":0,"b":0,"l":0, "r":0, "pad":0},
                       showlegend=False,
                       geo= dict(showland = True, landcolor = 'white', countrycolor = 'grey', bgcolor="lightgrey",scope='north america'))
+
+    # put the plot in the center of the page
+    fig.update_layout(
+        autosize=False,
+        width=1200,
+        height=700,
+        margin=dict(
+            l=0,
+            r=0,
+            b=0,
+            t=0,
+            pad=0
+        ),
+    )
+
 
     
     return fig

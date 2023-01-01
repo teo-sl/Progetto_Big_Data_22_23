@@ -271,9 +271,11 @@ plot3 = html.Div(
                                      parent_style=loading_style)
                      ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
                  ),
+                 html.Br(),
             ]),
             dbc.Row(
                     html.Div([
+                        html.Br(),
                         get_graph(
                             'plot',
                             id='map-routes',
@@ -703,7 +705,7 @@ def update_graph(z_axis, date_range, n_clicks):
      ])
 def update_graph(origin, scope, date_range, query, n_clicks):
     new_loading_style = loading_style
-    key = 'map1'+str(origin)+str(scope) + \
+    key = 'map5'+str(origin)+str(scope) + \
         str(date_range[0])+str(date_range[1])+str(query)
     if key in cache:
         ret = cache[key]
