@@ -3,7 +3,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from pyspark.sql.functions import *
 
-from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, scatter_queries, states_map_query
+from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, scatter_queries, states_map_query, textual_queries
 
 week_days_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 months_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -191,3 +191,6 @@ def plot_scatter(df,temp_granularity,x,y,z):
     title = f"Scatter plot with {dict[x]} on the x-axis, {dict[y]} on the y-axis and {dict[z]} as the colormap."
     fig.update_layout(title_text=title)
     return fig
+
+def plot_textual(df,date_from, date_to):
+    return textual_queries(df,date_from,date_to)

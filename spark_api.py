@@ -4,9 +4,12 @@ from pyspark.sql.functions import *
 import json
 from pyspark.sql.types import StructType
 import pickle
+from multiprocessing.pool import ThreadPool
 
 
 spark = SparkSession.builder.appName("flights").getOrCreate()
+cancelled_diverted = pd.read_csv("util/cancelled_diverted.csv")
+cancelled_diverted['FlightDate'] = pd.to_datetime(cancelled_diverted['FlightDate'])
 
 
 def load_cache():
@@ -133,3 +136,28 @@ def scatter_queries(df,temp_granularity):
         withColumnRenamed("avg(AirTime)", "AirTime").\
         withColumnRenamed("avg(Distance)", "Distance"))
     return df_agg
+
+def textual_queries(df,from_date,to_date):
+    df = df.filter(df["FlightDate"].between(from_date,to_date))
+    
+    cd_filtered = cancelled_diverted[(cancelled_diverted['FlightDate'] >= from_date) & (cancelled_diverted['FlightDate'] <= to_date)]
+    
+    cancelled = cd_filtered['Cancelled'].sum()
+    diverted = cd_filtered['Diverted'].sum()
+
+    pool = ThreadPool(4)
+    num = pool.apply_async(lambda : df.count())
+    airports = pool.apply_async(lambda : df.select('Origin').distinct().count()+df.select('Dest').distinct().count())
+    delayed = pool.apply_async(lambda : df.filter(df["ArrDelay"] > 0).count())
+    average_delay = pool.apply_async(lambda : df.agg({"ArrDelay": "avg"}).collect()[0][0])
+    pool.close()
+
+    pool.join()
+
+    # get the results
+    num = num.get()
+    airports = airports.get()
+    delayed = delayed.get()
+    average_delay = average_delay.get()
+
+    return [num,airports,cancelled,delayed,diverted,average_delay]

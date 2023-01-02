@@ -7,7 +7,7 @@ import pandas as pd
 import os
 import pickle
 
-from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_scatter, plot_states_map
+from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_scatter, plot_states_map, plot_textual
 
 from spark_api import get_dates, load_cache, load_dataset
 
@@ -31,7 +31,6 @@ app = dash.Dash(__name__,
                 eager_loading=True,
                 )
 
-# use light theme
 template = 'plotly_white'
 default_layout = {
     'autosize': True,
@@ -71,7 +70,6 @@ def get_graph(class_name, **kwargs):
     )
 
 
-# create a div screen containing a plot and a control panel
 plot1 = html.Div(
     className='plot-container',
     
@@ -126,14 +124,13 @@ plot1 = html.Div(
                 'plot',
                 id='matrix',
                 config=plot_config,
-                figure={}#matrix_plot(df, 'Month', 'DayOfWeek', 'count'),
+                figure={}
             ),
         ),
     ]
 )
 
 
-# create a slider to select the date range
 slider = html.Div(
     className='slider-container',
     children=[
@@ -150,7 +147,6 @@ slider = html.Div(
 )
 
 
-# create a div screen containing a plot and the slider
 plot2 = html.Div(
     className='plot-container',
     style={'margin-left': '4%', 'margin-right': '4%'},
@@ -159,7 +155,6 @@ plot2 = html.Div(
         dbc.Row([
                  slider,
                  html.Br(),
-                 # create a radio button to select count or delay
                  html.H4('Select the Z axis'),
                  dcc.RadioItems(
                      id='query-pie',
@@ -169,7 +164,6 @@ plot2 = html.Div(
                      ],
                      value='count',
                  ),
-                 #  add a button to activate the query
                  html.Br(),
                  html.Div(
                      className='control-panel',
@@ -192,8 +186,7 @@ plot2 = html.Div(
                         'plot',
                         id='pie-routes',
                         config=plot_config,
-                        figure={}#origin_dest_plot(df, dates[0], dates[100], 'count'),
-                        # layout=default_layout,
+                        figure={}
                     ),
                     dcc.Loading(id='loading', parent_style=loading_style)
                 ])
@@ -201,7 +194,6 @@ plot2 = html.Div(
     ]
 )
 
-# create a slider named "slider_map" over the dates
 slider_map = html.Div(
     className='slider-container',
     children=[
@@ -221,12 +213,10 @@ plot3 = html.Div(
     className='plot-container',
     style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        # create a dbc.row with a plot and the slider
             dbc.Row([
                  html.H2('Map of routes by average delay or number of flights',style={'text-align': 'center'}),
                  html.Br(),
-                 slider_map,
-                 # create a radio button to select count or delay
+                 slider_map,   
                  html.H4('Select the Z axis'),
                  dcc.RadioItems(
                      id='query-map-routes',
@@ -237,7 +227,6 @@ plot3 = html.Div(
                      value='NumFlights',
                  ),
                  html.Br(),
-                 # add a dropdown to select the origin from airports
                  html.H4('Select the origin'),
                  dcc.Dropdown(
                      id='origin-map-routes',
@@ -245,8 +234,7 @@ plot3 = html.Div(
                               for i in range(len(airports["IATA"]))],
                      value='BOS',
                  ),
-                html.Br(),
-                 # create a radio button to select the scope from airports or states
+                html.Br(), 
                  html.H4('Select the scope'),
                  dcc.RadioItems(
                      id='air-state-map-routes',
@@ -280,8 +268,7 @@ plot3 = html.Div(
                             'plot',
                             id='map-routes',
                             config=plot_config,
-                            figure={}#plot_routes(df, dates[0], dates[len(dates)-1], origin="BOS", query="NumFlights", scope='airports'),
-                            # layout=default_layout,
+                            figure={}
                         ),
                     ])
             ),
@@ -333,8 +320,7 @@ plot4 = html.Div(
                     'plot',
                     id='plot-state',
                     config=plot_config,
-                    figure={}#lot_states_map(df, "ORIGIN_STATE", "count"),
-                    # layout=default_layout,
+                    figure={}
                 ),
         ),
     ]
@@ -394,8 +380,7 @@ plot5 = html.Div(
                     'plot',
                     id='plot-airline',
                     config=plot_config,
-                    figure={}#plot_reporting_airlines(df,dates[0],dates[len(dates)-1],"count"),
-                    # layout=default_layout,
+                    figure={}
                 ),
             ),
                 
@@ -488,8 +473,7 @@ plot6 = html.Div(
                     'plot',
                     id='plot-scatter',
                     config=plot_config,
-                    figure={}#plot_scatter(df,"FlightDate","ArrDelay","DepDelay","count"),
-                    # layout=default_layout,
+                    figure={}
                 ),
             ),
         ])
@@ -513,6 +497,87 @@ header = html.Header(
     ],
 )
 
+
+slider_text = html.Div(
+    className='slider',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='date-slider',
+            min=0,
+            max=len(dates) - 1,
+            value=[0, len(dates) - 1],
+            marks={i: dates[i].strftime("%Y-%m-%d")
+                   for i in range(0, len(dates), 60)},
+        ),
+    ],
+)
+
+plot7 = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Some numeric info',style={'text-align': 'center'}),
+        dbc.Row([
+            slider_text,
+            html.Br(),
+            html.Div(
+                className='control-panel',
+                children=[
+                    html.Button(
+                        'Update',
+                        id='button-text',
+                        n_clicks=0,
+                        style={'flex-grow': '1'}
+                    ),
+                    dcc.Loading(id='load-text',
+                                parent_style=loading_style)
+                ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+            ),
+        ]),
+        html.Br(),
+        dbc.Row(
+            html.Div(
+                className='textual-data',
+                # increment font size
+                style={'font-size': '2.5em'},
+                children=[
+                    html.Br(),
+                    html.P('Number of flights:'),
+                    html.P('',
+                        style={'color': 'red','text-align':'center'},
+                        id='textual-num'
+                    ),
+                    html.P('Number of airports:'),
+                    html.P('',
+                        style={'color': 'blue','text-align':'center'},
+                        id='textual-airports'
+                    ),
+                    html.P('Number of cancelled flights:'),
+                    html.P('',
+                        style={'color': 'orange','text-align':'center'},
+                        id='textual-cancelled'
+                    ),
+                    html.P('Number of delayed flights:'),
+                    html.P('',
+                        style={'color': 'purple','text-align':'center'},
+                        id='textual-delayed'
+                    ),
+                    html.P('Number of diverted flights:'),
+                    html.P('',
+                        style={'color': 'pink','text-align':'center'},
+                        id='textual-diverted'
+                    ),
+                    html.P('Average delay:'),
+                    html.P('',
+                        style={'color': 'brown','text-align':'center'},
+                        id='textual-average-delay'
+                    ),
+                ]
+            )
+        )
+    ]
+)
 
 
 about_app = html.Div(
@@ -575,7 +640,6 @@ cache_saver = html.Div(
         )
     ]
 )
-# define an header 
 
 app.layout = html.Div(
     className='flight-container',
@@ -587,7 +651,7 @@ app.layout = html.Div(
 
             children=[
                 html.Div(
-                    # make the title white and add margin
+                    
                     style={'color': 'white', 'margin-left': '10px'},
                     className='title',
                     children=[
@@ -597,11 +661,11 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     className='header',
-                    # put the children in the center of the header
+                    
                     style={'display': 'flex', 'justify-content': 'center'},
                     children=[
                         modal,
-                        # control_panel
+                        
                     ])
             ]),
         cache_saver,
@@ -630,6 +694,10 @@ app.layout = html.Div(
         html.Hr(style = {'border': '5px solid black'}),
 
         plot6,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        plot7,
     ])
 
 @app.callback(
@@ -641,6 +709,7 @@ def cache_save(n_intervals):
     pickle.dump(cache,open('util/cache.pkl','wb'))
     return []
 
+
 @app.callback(
     Output('modal', 'is_open'),
     [Input('open_modal', 'n_clicks'), Input('close', 'n_clicks')],
@@ -650,8 +719,6 @@ def toggle_modal(n1, n2, is_open):
     if n1 or n2:
         return not is_open
     return
-
-# update the plot when the user selects a different x-axis and z-axis
 
 
 @app.callback(
@@ -671,8 +738,6 @@ def update_graph(x_axis, z_axis, n_clicks):
 
     return ret, new_loading_style
 
-# update the plot when the user selects a different z-axis and time range
-
 
 @app.callback(
     [Output('pie-routes', 'figure'), Output('load-pie', 'parent_style')],
@@ -691,9 +756,6 @@ def update_graph(z_axis, date_range, n_clicks):
         cache[key] = ret
 
     return ret, new_loading_style
-
-# update the plot when the user selects a different origin and scope
-
 
 @app.callback(
     [Output('map-routes', 'figure'), Output('load-map-routes', 'parent_style')],
@@ -716,7 +778,7 @@ def update_graph(origin, scope, date_range, query, n_clicks):
 
     return ret, new_loading_style
 
-# update the plot-state when orig-dest-selector and query-state are changed, based on button-state
+
 @app.callback(
     [Output('plot-state','figure'),Output('load-state','parent_style')],
     [State('orig-dest-selector','value'),
@@ -771,6 +833,43 @@ def update_graph(time,x,y,z,n_clicks):
         cache[key]=ret
     return ret,new_loading_style
 
+
+@app.callback(
+    [
+        Output('textual-num','children'),
+        Output('textual-airports','children'),
+        Output('textual-cancelled','children'),
+        Output('textual-delayed','children'),
+        Output('textual-diverted','children'),
+        Output('textual-average-delay','children'),
+        Output('load-text','parent_style')
+    ],
+    [
+        State('date-slider','value'),
+        Input('button-text','n_clicks')
+    ]
+)
+def update_text(date_range,n_clics):
+    new_loading_style = loading_style
+    key = 'text1 '+str(date_range[0])+' '+str(date_range[1])
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_textual(df,dates[date_range[0]],dates[date_range[1]])
+        cache[key]=ret
+    ret = ret[:]
+    for i in range(len(ret)):
+        ret[i] = str(ret[i])
+    ret[0] = '{:,}'.format(int(ret[0]))
+    ret[2] = '{:,}'.format(int(float(ret[2])))
+    ret[3] = '{:,}'.format(int(ret[3]))
+    ret[4] = '{:,}'.format(int(float(ret[4])))
+
+    if ret[5].find('.') != -1:
+        ret[5] = ret[5][0:ret[5].find('.')+3]    
+    ret[5] = ret[5]+' minutes'
+
+    return ret[0],ret[1],ret[2],ret[3],ret[4],ret[5],new_loading_style
 
 # run the app debug mode and 9000 port
 if __name__ == '__main__':
