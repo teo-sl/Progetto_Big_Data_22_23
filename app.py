@@ -140,7 +140,7 @@ slider = html.Div(
             min=0,
             max=len(dates) - 1,
             value=[0, len(dates) - 1],
-            marks={i: dates[i].strftime("%Y-%m-%d")
+            marks={i: dates[i].strftime("%d-%m-%Y")
                    for i in range(0, len(dates), 60)},
         ),
     ],
@@ -203,7 +203,7 @@ slider_map = html.Div(
             min=0,
             max=len(dates) - 1,
             value=[0, len(dates) - 1],
-            marks={i: dates[i].strftime("%Y-%m-%d")
+            marks={i: dates[i].strftime("%d-%m-%Y")
                    for i in range(0, len(dates), 60)},
         ),
     ],
@@ -335,7 +335,7 @@ slider_airlines = html.Div(
             min=0,
             max=len(dates) - 1,
             value=[0, len(dates) - 1],
-            marks={i: dates[i].strftime("%Y-%m-%d")
+            marks={i: dates[i].strftime("%d-%m-%Y")
                    for i in range(0, len(dates), 60)},
         ),
     ],
@@ -507,7 +507,7 @@ slider_text = html.Div(
             min=0,
             max=len(dates) - 1,
             value=[0, len(dates) - 1],
-            marks={i: dates[i].strftime("%Y-%m-%d")
+            marks={i: dates[i].strftime("%d-%m-%Y")
                    for i in range(0, len(dates), 60)},
         ),
     ],
@@ -705,7 +705,6 @@ app.layout = html.Div(
     (Input('chache-timeout','n_intervals')),
 )
 def cache_save(n_intervals):
-    os.remove('util/cache.pkl')
     pickle.dump(cache,open('util/cache.pkl','wb'))
     return []
 
@@ -729,7 +728,7 @@ def toggle_modal(n1, n2, is_open):
      ])
 def update_graph(x_axis, z_axis, n_clicks):
     new_loading_style = loading_style
-    key = 'matrix1'+str(x_axis)+str(z_axis)
+    key = 'matrix1 '+str(x_axis)+' '+str(z_axis)
     if key in cache:
         ret = cache[key]
     else:
@@ -747,7 +746,7 @@ def update_graph(x_axis, z_axis, n_clicks):
      ])
 def update_graph(z_axis, date_range, n_clicks):
     new_loading_style = loading_style
-    key = 'pie1'+str(z_axis)+str(date_range[0])+str(date_range[1])
+    key = 'pie1 '+str(z_axis)+' '+str(date_range[0])+' '+str(date_range[1])
     if key in cache:
         ret = cache[key]
     else:
@@ -767,8 +766,8 @@ def update_graph(z_axis, date_range, n_clicks):
      ])
 def update_graph(origin, scope, date_range, query, n_clicks):
     new_loading_style = loading_style
-    key = 'map5'+str(origin)+str(scope) + \
-        str(date_range[0])+str(date_range[1])+str(query)
+    key = 'map5 '+str(origin)+' '+str(scope) +' '+\
+        str(date_range[0])+' '+str(date_range[1])+' '+str(query)
     if key in cache:
         ret = cache[key]
     else:
@@ -787,7 +786,7 @@ def update_graph(origin, scope, date_range, query, n_clicks):
 )
 def update_graph(orig_dest,query,n_clicks):
     new_loading_style = loading_style
-    key = 'state1'+str(orig_dest)+str(query)
+    key = 'state1 '+str(orig_dest)+' '+str(query)
     if key in cache:
         ret = cache[key]
     else:
@@ -805,7 +804,7 @@ def update_graph(orig_dest,query,n_clicks):
 def update_graph(query,date_range,n_clicks):
     
     new_loading_style = loading_style
-    key = 'airline1'+str(query)+str(date_range[0])+str(date_range[1])        
+    key = 'airline1 '+str(query)+' '+str(date_range[0])+' '+str(date_range[1])        
     if key in cache:
         ret = cache[key]
     else:
@@ -825,7 +824,7 @@ def update_graph(query,date_range,n_clicks):
 )
 def update_graph(time,x,y,z,n_clicks):
     new_loading_style = loading_style
-    key = 'scatter1'+str(time)+str(x)+str(y)+str(z)
+    key = 'scatter1 '+str(time)+' '+str(x)+' '+str(y)+' '+str(z)
     if key in cache:
         ret = cache[key]
     else:
@@ -851,7 +850,7 @@ def update_graph(time,x,y,z,n_clicks):
 )
 def update_text(date_range,n_clics):
     new_loading_style = loading_style
-    key = 'text1 '+str(date_range[0])+' '+str(date_range[1])
+    key = 'text2 '+str(date_range[0])+' '+str(date_range[1])
     if key in cache:
         ret = cache[key]
     else:

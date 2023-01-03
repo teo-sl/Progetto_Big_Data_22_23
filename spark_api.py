@@ -147,7 +147,7 @@ def textual_queries(df,from_date,to_date):
 
     pool = ThreadPool(4)
     num = pool.apply_async(lambda : df.count())
-    airports = pool.apply_async(lambda : df.select('Origin').distinct().count()+df.select('Dest').distinct().count())
+    airports = pool.apply_async(lambda : df.select('Origin').union(df.select('Dest')).distinct().count())
     delayed = pool.apply_async(lambda : df.filter(df["ArrDelay"] > 0).count())
     average_delay = pool.apply_async(lambda : df.agg({"ArrDelay": "avg"}).collect()[0][0])
     pool.close()

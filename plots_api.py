@@ -38,7 +38,7 @@ def origin_dest_plot(df,from_date,to_date,query="ArrDelay"):
     # create a new column with the origin and destination
     df_pd["Origin-Dest"] = df_pd["Origin"] + " - " + df_pd["Dest"]
     title = "Arrival delay by origin and destination" if query=="ArrDelay" else "Number of flights by origin and destination"
-    title+=" from "+str(from_date)[0:10]+" to "+str(to_date)[0:10]
+    title+=" from "+str(from_date.strftime("%d-%m-%Y"))+" to "+str(to_date.strftime("%d-%m-%Y"))
     fig = px.pie(df_pd.head(20), values=query, names='Origin-Dest', title=title)
     return fig
 
@@ -137,10 +137,14 @@ def plot_routes(df,date_start,date_to,origin="BOS",query="NumFlights",scope="air
 
 def plot_states_map(df,group,query):
     df_avg = states_map_query(df,group).toPandas()
+    # remove AS and GU as they are not in the map
     df_avg = df_avg.drop(df_avg[df_avg[group] == "AS"].index)
     df_avg = df_avg.drop(df_avg[df_avg[group] == "GU"].index)
     
-    fig = px.choropleth(locations=df_avg[group], locationmode="USA-states", color=df_avg[query], scope="usa")
+    # join with states
+    df_avg = df_avg.merge(states, left_on=group, right_on="Abbreviation")
+
+    fig = px.choropleth(df_avg,locations=group, locationmode="USA-states", color=query, scope="usa",hover_data=["State"])
 
     title = "Average arrival delay " if query=="AverageArrivalDelay" else "Number of flights "
     title+=" by origin state " if group=="ORIGIN_STATE" else " by destination state "
