@@ -215,6 +215,7 @@ plot3 = html.Div(
     children=[
             dbc.Row([
                  html.H2('Map of routes by average delay or number of flights',style={'text-align': 'center'}),
+                 html.H5('',id='map-routes-title',style={'text-align': 'center'}),
                  html.Br(),
                  slider_map,   
                  html.H4('Select the Z axis'),
@@ -233,6 +234,7 @@ plot3 = html.Div(
                      options=[{'label': airports["AIRPORT"][i], 'value': airports["IATA"][i]}
                               for i in range(len(airports["IATA"]))],
                      value='BOS',
+                     clearable=False
                  ),
                 html.Br(), 
                  html.H4('Select the scope'),
@@ -347,6 +349,7 @@ plot5 = html.Div(
     style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
             html.H2('Flights per airline',style={'text-align': 'center'}),
+            html.H5('',id='airline-period',style={'text-align': 'center'}),
             dbc.Row([
                 slider_airlines,
                 html.Br(),
@@ -518,6 +521,7 @@ plot7 = html.Div(
     style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
         html.H2('Some numeric info',style={'text-align': 'center'}),
+        html.H5('',id='text-period',style={'text-align': 'center'}),
         dbc.Row([
             slider_text,
             html.Br(),
@@ -757,7 +761,7 @@ def update_graph(z_axis, date_range, n_clicks):
     return ret, new_loading_style
 
 @app.callback(
-    [Output('map-routes', 'figure'), Output('load-map-routes', 'parent_style')],
+    [Output('map-routes', 'figure'), Output('load-map-routes', 'parent_style'),Output('map-routes-title','children')],
     [State('origin-map-routes', 'value'),
         State('air-state-map-routes', 'value'),
         State('slider-3', 'value'),
@@ -765,8 +769,9 @@ def update_graph(z_axis, date_range, n_clicks):
         Input('button-map-routes', 'n_clicks')
      ])
 def update_graph(origin, scope, date_range, query, n_clicks):
+    title_text = 'Period: from ' + dates[date_range[0]].strftime('%d-%m-%Y') + ' to ' + dates[date_range[1]].strftime('%d-%m-%Y')
     new_loading_style = loading_style
-    key = 'map5 '+str(origin)+' '+str(scope) +' '+\
+    key = 'map1 '+str(origin)+' '+str(scope) +' '+\
         str(date_range[0])+' '+str(date_range[1])+' '+str(query)
     if key in cache:
         ret = cache[key]
@@ -775,7 +780,7 @@ def update_graph(origin, scope, date_range, query, n_clicks):
                           dates[date_range[1]], origin, query, scope)
         cache[key] = ret
 
-    return ret, new_loading_style
+    return ret, new_loading_style,title_text
 
 
 @app.callback(
@@ -796,13 +801,13 @@ def update_graph(orig_dest,query,n_clicks):
     return ret, new_loading_style
 
 @app.callback(
-    [Output('plot-airline','figure'),Output('load-airlines','parent_style')],
+    [Output('plot-airline','figure'),Output('load-airlines','parent_style'),Output('airline-period','children')],
     [State('query-airlines','value'),
     State('slider-4','value'),
     Input('button-airlines','n_clicks')]
 )
 def update_graph(query,date_range,n_clicks):
-    
+    title_text = 'Period: from ' + dates[date_range[0]].strftime('%d-%m-%Y') + ' to ' + dates[date_range[1]].strftime('%d-%m-%Y')
     new_loading_style = loading_style
     key = 'airline1 '+str(query)+' '+str(date_range[0])+' '+str(date_range[1])        
     if key in cache:
@@ -810,7 +815,7 @@ def update_graph(query,date_range,n_clicks):
     else:
         ret = plot_reporting_airlines(df,dates[date_range[0]],dates[date_range[1]],query)
         cache[key] = ret
-    return ret, new_loading_style
+    return ret, new_loading_style,title_text
 
 @app.callback(
     [Output('plot-scatter','figure'),Output('load-scatter','parent_style')],
@@ -841,7 +846,8 @@ def update_graph(time,x,y,z,n_clicks):
         Output('textual-delayed','children'),
         Output('textual-diverted','children'),
         Output('textual-average-delay','children'),
-        Output('load-text','parent_style')
+        Output('load-text','parent_style'),
+        Output('text-period','children')
     ],
     [
         State('date-slider','value'),
@@ -849,8 +855,9 @@ def update_graph(time,x,y,z,n_clicks):
     ]
 )
 def update_text(date_range,n_clics):
+    title_text = 'Period: from ' + dates[date_range[0]].strftime('%d-%m-%Y') + ' to ' + dates[date_range[1]].strftime('%d-%m-%Y')
     new_loading_style = loading_style
-    key = 'text2 '+str(date_range[0])+' '+str(date_range[1])
+    key = 'text1 '+str(date_range[0])+' '+str(date_range[1])
     if key in cache:
         ret = cache[key]
     else:
@@ -868,7 +875,7 @@ def update_text(date_range,n_clics):
         ret[5] = ret[5][0:ret[5].find('.')+3]    
     ret[5] = ret[5]+' minutes'
 
-    return ret[0],ret[1],ret[2],ret[3],ret[4],ret[5],new_loading_style
+    return ret[0],ret[1],ret[2],ret[3],ret[4],ret[5],new_loading_style,title_text
 
 # run the app debug mode and 9000 port
 if __name__ == '__main__':
