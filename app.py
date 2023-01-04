@@ -1,21 +1,29 @@
+####### IMPORTS #########
+
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
-import os
 import pickle
 
-from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, plot_routes, plot_scatter, plot_states_map, plot_textual
+
+from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, \
+                      plot_routes, plot_scatter, plot_states_map, plot_textual
 
 from spark_api import get_dates, load_cache, load_dataset
+
+
+####### LOAD DATA #######
 
 cache = load_cache()
 df = load_dataset()
 dates = get_dates()
 airports = pd.read_csv("util/airports.csv")
 
+
+####### APP LAYOUT #######
 
 loading_style = {'position': 'absolute', 'align-self': 'center'}
 
@@ -60,6 +68,9 @@ plot_config = {
 }
 
 
+###### UTIL FUNCTIONS #########
+
+
 def get_graph(class_name, **kwargs):
     return html.Div(
         className=class_name + ' plotz-container',
@@ -69,6 +80,10 @@ def get_graph(class_name, **kwargs):
         ],
     )
 
+####### APP COMPONENTS #######
+
+
+# heatmap plot
 
 plot1 = html.Div(
     className='plot-container',
@@ -146,6 +161,7 @@ slider = html.Div(
     ],
 )
 
+# pie plot, origin-destination
 
 plot2 = html.Div(
     className='plot-container',
@@ -194,6 +210,8 @@ plot2 = html.Div(
     ]
 )
 
+
+
 slider_map = html.Div(
     className='slider-container',
     children=[
@@ -208,6 +226,8 @@ slider_map = html.Div(
         ),
     ],
 )
+
+# map for routes
 
 plot3 = html.Div(
     className='plot-container',
@@ -247,7 +267,6 @@ plot3 = html.Div(
                      value='airports',
                  ),
                  html.Br(),
-                 #  add a button to activate the query
                  html.Div(
                      className='control-panel',
                      children=[
@@ -277,11 +296,13 @@ plot3 = html.Div(
     ]
 )
 
+# states plot
+
 plot4 = html.Div(
     className='plot-container',
     style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        html.H2('Map of airports by average delay or number of flights',style={'text-align': 'center'}),
+        html.H2('Map of states by average delay or number of flights',style={'text-align': 'center'}),
         dbc.Row([
             html.H4('Select from origin or destination'),
             dcc.RadioItems(
@@ -343,6 +364,7 @@ slider_airlines = html.Div(
     ],
 )
 
+# airlines plot
 
 plot5 = html.Div(
     className='plot-container',
@@ -391,23 +413,6 @@ plot5 = html.Div(
     ]
 )
 
-header = html.Header(
-    className='header',
-    children=[
-        html.Div(
-            className='header-title',
-            children=[
-                html.H1('Flight data'),
-                html.H2('Visualizing flight data from the US'),
-            ],
-        ),
-        html.Img(
-            className='header-logo',
-            src=app.get_asset_url('./dash-logo.png'),
-        ),
-    ],
-)
-
 option_scatter = [{"label" : "Arrival delay", "value" : "ArrDelay"},
                 {"label":"Departure delay" ,"value" :"DepDelay"},
                 {"label":"Number of flights" ,"value" :"count"},
@@ -416,6 +421,8 @@ option_scatter = [{"label" : "Arrival delay", "value" : "ArrDelay"},
                 {"label": "Air time","value" :"AirTime"},
                 {"label": "Distance","value" :"distance"}
             ]
+
+# scatter plot
 
 plot6 = html.Div(
     className='plot-container',
@@ -483,24 +490,6 @@ plot6 = html.Div(
     ]
 )
 
-header = html.Header(
-    className='header',
-    children=[
-        html.Div(
-            className='header-title',
-            children=[
-                html.H1('Flight data'),
-                html.H2('Visualizing flight data from the US'),
-            ],
-        ),
-        html.Img(
-            className='header-logo',
-            src=app.get_asset_url('./dash-logo.png'),
-        ),
-    ],
-)
-
-
 slider_text = html.Div(
     className='slider',
     children=[
@@ -515,6 +504,8 @@ slider_text = html.Div(
         ),
     ],
 )
+
+# numeric data
 
 plot7 = html.Div(
     className='plot-container',
@@ -543,7 +534,6 @@ plot7 = html.Div(
         dbc.Row(
             html.Div(
                 className='textual-data',
-                # increment font size
                 style={'font-size': '2.5em'},
                 children=[
                     html.Br(),
@@ -583,24 +573,32 @@ plot7 = html.Div(
     ]
 )
 
+###### APP HEADER ########
 
 about_app = html.Div(
     children=[
         html.H2('About the Dashboard'),
         html.P('''
-        lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        Welcome to the 2013 Flight Data Dashboard! This interactive tool allows 
+        you to explore and analyze flight data from across the United States for 
+        the entire year of 2013. With this dashboard, you can gain insights into 
+        flight patterns, delays, and performance, as well as compare data across 
+        different airlines and airports. Start by selecting your preferred filters 
+        and then dive into the data using the various charts and graphs. 
+        Thank you for using our dashboard! \n 
+        Authors: \n
+        Filippo Andrea Folino \n
+        Teodoro Sullazzo
         ''')
     ]
 )
 
 
 modal = html.Div(
-    # put in the center of the page
     children=[
         dbc.Button(
             'About the Dashboard',
             id='open_modal',
-            # make the button white
             color='link',
             style={
              'background-color': 'blue',
@@ -633,6 +631,8 @@ modal = html.Div(
     ]
 )
 
+###### CACHE ########
+
 cache_saver = html.Div(
     id='cache-saver',
     style={'display': 'none'},
@@ -645,12 +645,14 @@ cache_saver = html.Div(
     ]
 )
 
+
+##### COMPONING APP ######
+
 app.layout = html.Div(
     className='flight-container',
     children=[
         html.Header(
             className='header',
-            # make the header purple
             style={'background-color': '#4d004b'},
 
             children=[
@@ -674,7 +676,6 @@ app.layout = html.Div(
             ]),
         cache_saver,
 
-        # add a black line to separate the components
         html.Hr(style = {'border': '5px solid black'}),
 
         plot1,
@@ -704,6 +705,11 @@ app.layout = html.Div(
         plot7,
     ])
 
+
+###### CALLBACKS ########
+
+# cache saving
+
 @app.callback(
     Output('placeholder','children'),
     (Input('chache-timeout','n_intervals')),
@@ -712,6 +718,8 @@ def cache_save(n_intervals):
     pickle.dump(cache,open('util/cache.pkl','wb'))
     return []
 
+
+# header button
 
 @app.callback(
     Output('modal', 'is_open'),
@@ -723,6 +731,7 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return
 
+# update heatmap
 
 @app.callback(
     [Output('matrix', 'figure'), Output('loading-1', 'parent_style')],
@@ -741,6 +750,7 @@ def update_graph(x_axis, z_axis, n_clicks):
 
     return ret, new_loading_style
 
+# update pie chart
 
 @app.callback(
     [Output('pie-routes', 'figure'), Output('load-pie', 'parent_style')],
@@ -759,6 +769,8 @@ def update_graph(z_axis, date_range, n_clicks):
         cache[key] = ret
 
     return ret, new_loading_style
+
+# update map routes
 
 @app.callback(
     [Output('map-routes', 'figure'), Output('load-map-routes', 'parent_style'),Output('map-routes-title','children')],
@@ -782,6 +794,7 @@ def update_graph(origin, scope, date_range, query, n_clicks):
 
     return ret, new_loading_style,title_text
 
+# update map states
 
 @app.callback(
     [Output('plot-state','figure'),Output('load-state','parent_style')],
@@ -800,6 +813,8 @@ def update_graph(orig_dest,query,n_clicks):
 
     return ret, new_loading_style
 
+# update airline reporting
+
 @app.callback(
     [Output('plot-airline','figure'),Output('load-airlines','parent_style'),Output('airline-period','children')],
     [State('query-airlines','value'),
@@ -816,6 +831,8 @@ def update_graph(query,date_range,n_clicks):
         ret = plot_reporting_airlines(df,dates[date_range[0]],dates[date_range[1]],query)
         cache[key] = ret
     return ret, new_loading_style,title_text
+
+# update scatter
 
 @app.callback(
     [Output('plot-scatter','figure'),Output('load-scatter','parent_style')],
@@ -837,6 +854,8 @@ def update_graph(time,x,y,z,n_clicks):
         cache[key]=ret
     return ret,new_loading_style
 
+
+# update textual
 
 @app.callback(
     [
@@ -876,6 +895,8 @@ def update_text(date_range,n_clics):
     ret[5] = ret[5]+' minutes'
 
     return ret[0],ret[1],ret[2],ret[3],ret[4],ret[5],new_loading_style,title_text
+
+##### APP RUN #######
 
 # run the app debug mode and 9000 port
 if __name__ == '__main__':
