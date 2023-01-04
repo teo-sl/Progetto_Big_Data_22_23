@@ -2,7 +2,10 @@
 from pyspark.sql.functions import col
 from pyspark.sql.functions import *
 from pyspark.sql import SparkSession
+
+import os.path
 import numpy as np
+import pickle
 
 STARTING_MONTH = 1
 ENDING_MONTH = 9
@@ -26,16 +29,33 @@ def get_column_alias_key(value):
 def get_column_per_agg_level():
     return column_per_aggregation_level
 
-def get_destinations(flights_df, destination_type):
-    return list(flights_df.select(destination_type).distinct().toPandas()[destination_type])
+def get_destinations(destination_type):
+    file_path = "code/backend/serialized_objects/" + destination_type + ".pkl"
+    loaded_destinations = None
+    with open(file_path, "rb") as f:
+        loaded_destinations = pickle.load(f)
+    return loaded_destinations        
 
-def get_origins(flights_df, origin_type):
-    return list(flights_df.select(origin_type).distinct().toPandas()[origin_type])
+def get_origins(origin_type):
+    file_path = "code/backend/serialized_objects/" + origin_type + ".pkl"
+    loaded_origins = None
+    with open(file_path, 'rb') as f:
+        loaded_origins = pickle.load(f)
+    return loaded_origins
+
 
 # aggiungere lo schema
 def load_dataset():
     flights_df = spark.read.csv("data.nosync/cleaned/cleaned_flights.csv", inferSchema=True, header=True)
     return flights_df
+
+def load_cache():
+    # check if util/cache.pkl exists
+    try:
+        cache = pickle.load(open("util/cache.pkl","rb"))
+    except:
+        cache = {}
+    return cache
 
 
 # plot della classifica dei primi x migliori in base allo stato di destinazione o aereporto di destinazione. 
