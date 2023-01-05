@@ -542,11 +542,6 @@ plot7 = html.Div(
                         style={'color': 'red','text-align':'center'},
                         id='textual-num'
                     ),
-                    html.P('Number of airports:'),
-                    html.P('',
-                        style={'color': 'blue','text-align':'center'},
-                        id='textual-airports'
-                    ),
                     html.P('Number of cancelled flights:'),
                     html.P('',
                         style={'color': 'orange','text-align':'center'},
@@ -804,7 +799,7 @@ def update_graph(origin, scope, date_range, query, n_clicks):
 )
 def update_graph(orig_dest,query,n_clicks):
     new_loading_style = loading_style
-    key = 'state1 '+str(orig_dest)+' '+str(query)
+    key = 'state2 '+str(orig_dest)+' '+str(query)
     if key in cache:
         ret = cache[key]
     else:
@@ -860,7 +855,6 @@ def update_graph(time,x,y,z,n_clicks):
 @app.callback(
     [
         Output('textual-num','children'),
-        Output('textual-airports','children'),
         Output('textual-cancelled','children'),
         Output('textual-delayed','children'),
         Output('textual-diverted','children'),
@@ -876,7 +870,7 @@ def update_graph(time,x,y,z,n_clicks):
 def update_text(date_range,n_clics):
     title_text = 'Period: from ' + dates[date_range[0]].strftime('%d-%m-%Y') + ' to ' + dates[date_range[1]].strftime('%d-%m-%Y')
     new_loading_style = loading_style
-    key = 'text1 '+str(date_range[0])+' '+str(date_range[1])
+    key = 'text3 '+str(date_range[0])+' '+str(date_range[1])
     if key in cache:
         ret = cache[key]
     else:
@@ -886,15 +880,15 @@ def update_text(date_range,n_clics):
     for i in range(len(ret)):
         ret[i] = str(ret[i])
     ret[0] = '{:,}'.format(int(ret[0]))
-    ret[2] = '{:,}'.format(int(float(ret[2])))
-    ret[3] = '{:,}'.format(int(ret[3]))
-    ret[4] = '{:,}'.format(int(float(ret[4])))
+    ret[1] = '{:,}'.format(int(float(ret[1])))
+    ret[2] = '{:,}'.format(int(ret[2]))
+    ret[3] = '{:,}'.format(int(float(ret[3])))
 
-    if ret[5].find('.') != -1:
-        ret[5] = ret[5][0:ret[5].find('.')+3]    
-    ret[5] = ret[5]+' minutes'
+    if ret[4].find('.') != -1:
+        ret[4] = ret[4][0:ret[4].find('.')+3]    
+    ret[4] = ret[4]+' minutes'
 
-    return ret[0],ret[1],ret[2],ret[3],ret[4],ret[5],new_loading_style,title_text
+    return ret[0],ret[1],ret[2],ret[3],ret[4],new_loading_style,title_text
 
 ##### APP RUN #######
 

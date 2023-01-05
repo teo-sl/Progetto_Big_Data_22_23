@@ -14,6 +14,8 @@ from multiprocessing.pool import ThreadPool
 spark = SparkSession.builder.appName("flights").getOrCreate()
 cancelled_diverted = pd.read_csv("util/cancelled_diverted.csv")
 cancelled_diverted['FlightDate'] = pd.to_datetime(cancelled_diverted['FlightDate'])
+textual = pd.read_csv("util/textual_queries.csv")
+textual['FlightDate'] = pd.to_datetime(textual['FlightDate'])
 
 ###### UTIL FUNCTIONS ########
 
@@ -169,6 +171,13 @@ def scatter_queries(df,temp_granularity):
 
 def textual_queries(df,from_date,to_date):
     df = df.filter(df["FlightDate"].between(from_date,to_date))
+    # filter textual pandas dataframe using the dates
+    textual_filtered = textual[(textual['FlightDate'] >= from_date) &
+                                (textual['FlightDate'] <= to_date)]
+    
+    num = textual_filtered["count"].sum()
+    delayed = textual_filtered["delay_count"].sum()
+    average_delay = textual_filtered["delay_sum"].sum()/num
     
     cd_filtered = cancelled_diverted[(cancelled_diverted['FlightDate'] >= from_date) & 
                     (cancelled_diverted['FlightDate'] <= to_date)]
@@ -176,23 +185,6 @@ def textual_queries(df,from_date,to_date):
     cancelled = cd_filtered['Cancelled'].sum()
     diverted = cd_filtered['Diverted'].sum()
 
-    # execute the queries in parallel
-    pool = ThreadPool(4)
-    num = pool.apply_async(lambda : df.count())
-    airports = pool.apply_async(lambda : df.select('Origin').
-                                            union(df.select('Dest')).
-                                            distinct().count())
-    delayed = pool.apply_async(lambda : df.filter(df["ArrDelay"] > 0).count())
-    average_delay = pool.apply_async(lambda : df.agg({"ArrDelay": "avg"}).
-                                                            collect()[0][0])
-    pool.close()
 
-    pool.join()
 
-    # get the results
-    num = num.get()
-    airports = airports.get()
-    delayed = delayed.get()
-    average_delay = average_delay.get()
-
-    return [num,airports,cancelled,delayed,diverted,average_delay]
+    return [num,cancelled,delayed,diverted,average_delay]

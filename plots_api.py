@@ -126,7 +126,7 @@ def plot_routes(df,date_start,date_to,origin="BOS",query="NumFlights",scope="air
                       margin={"t":0,"b":0,"l":0, "r":0, "pad":0},
                       showlegend=False,
                       geo= dict(showland = True, 
-                                andcolor = 'white', 
+                                landcolor = 'white', 
                                 countrycolor = 'grey', 
                                 bgcolor="lightgrey",
                                 scope='north america'))
@@ -164,8 +164,8 @@ def plot_states_map(df,group,query):
                         color=query, scope="usa",
                         hover_data=["State"])
 
-    title = "Average arrival delay " if query=="AverageArrivalDelay" else "Number of flights "
-    title+=" by origin state " if group=="ORIGIN_STATE" else " by destination state "
+    title = "Average arrival delay " if query=="ArrDelay" else "Number of flights "
+    title+="by origin state " if group=="ORIGIN_STATE" else "by destination state "
     fig.update_layout(title_text=title)
     
     return fig
