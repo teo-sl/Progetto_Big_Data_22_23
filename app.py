@@ -102,8 +102,12 @@ plot1 = html.Div(
                         options=[
                             {'label': 'Departure time block',
                                 'value': 'DepTimeBlk'},
+                            {'label': 'Arrive time block', 'value':'ArrTimeBlk'},
                             {'label': 'Month', 'value': 'Month'},
+                            
                         ],
+                        # add space beterrn the options
+                        style={'display': 'flex', 'flex-direction': 'column'},
                         value='Month',
                     ),
                     html.Br(),
