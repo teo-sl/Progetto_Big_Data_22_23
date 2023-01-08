@@ -1,0 +1,37 @@
+Features,Description
+Year,Anno del volo [2013]
+Quarter,Trimestre [1-4]
+Month,Mese del volo [1-12]
+DayofMonth,Giorno del mese [1-31]
+DayOfWeek,Giorno della settimana [1-7]
+FlightDate,Data completa del volo nel formato YYYY-MM-DD
+Reporting_Airline,Codice identificativo della compagnia aerea
+Tail_Number,Identificativo del volo
+Flight_Number_Reporting_Airline,Numero del volo in riferimento alla compagnia aerea
+Origin,Codice IATA dell'aeroporto di origine
+Dest,Codice IATA dell'aeroporto di destinazione
+CRSDepTime,Orario programmato per la partenza nel formato HHMM
+DepTime,Orario effettivo per la partenza nel formato HHMM
+DepDelay,Ritardo per la partenza in minuti (se negativo il volo è partito prima dell'orario programmato)
+DepDelayMinutes,Ritardo per la partenza in minuti (è zero se partito in orario o in anticipo)
+DepDel15,Un booleano che indica se il ritardo alla partenza è >= di 15 minuti
+DepartureDelayGroups,Raggruppa i ritardi alla partenza in 15 minuti intervalli
+DepTimeBlk,Discretizza gli orari di partenza in gruppi di un'ora ciascuno (e.g. 2100-2159)
+TaxiOut,Taxi out time in minuti
+WheelsOff,Orario di decollo effettivo nel formato HHMM
+WheelsOn,Oratio di atterraggio effettivo nel formato HHMM
+TaxiIn,Taxi in time in minuti
+CRSArrTime,Orario programmato per l'arrivo
+ArrTime,Orario effettivo dell'arrivo
+ArrDelay,Ritardo in partenza (se negativo il volo è arrivato prima dell'orario programmato)
+ArrDelayMinutes,Ritardo in partenza (è zero se arrivato in orario o in anticipo)
+ArrDel15,Un booleano che indica se il ritardo all'arrivo è >= di 15 minuti
+ArrivalDelayGroups,Raggruppa i ritardi all'arrivo in 15 minuti intervalli
+ArrTimeBlk,Discretizza gli orari di arrivo in gruppi di un'ora ciascuno (e.g. 2100-2159)
+Cancelled,Un booleano che indica se il volo è stato cancellato
+Diverted,Un booleano che indica se il volo è stato deviato 
+CRSElapsedTime,Tempo di volo programmato in minuti
+ActualElapsedTime,Tempo trascorso tra la partenza e l'arrivo effettivi in minuti
+AirTime,Tempo trascorso in volo in minuti
+Distance,Distanza percorsa
+DistanceGroup,Discretizza la distanza percorsa
