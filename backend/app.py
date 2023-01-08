@@ -7,8 +7,7 @@ from dash import html
 from dash.dependencies import Input, Output, State
 
 from spark_api import load_dataset, get_column_aliases, get_column_alias_key, get_destinations, get_origins, load_cache
-from plots_api import pie_plot_by_interval, plot_x_places_by_interval, facet_plot_over_interval, plot_mean_arr_delay_per_dest, plot_mean_dep_delay_per_origin,\
-                        plot_delay_groups
+from plots_api import pie_plot_by_interval, plot_x_places_by_interval, facet_plot_over_interval, plot_mean_arr_delay_per_dest, plot_mean_dep_delay_per_origin, plot_num_of_flights_facet
 
 df = load_dataset()
 cache = load_cache()
@@ -18,10 +17,10 @@ column_aliases_values = get_column_aliases().values()
 days = [1 for i in range(31)]
 months = {1:"Jan", 2:"Feb", 3:"March", 4:"April", 5:"May", 6:"June", 7:"July", 8:"August", 9:"September", 10:"October", 11:"November", 12:"December"}
 
-origins_states = get_origins("ORIGIN_STATE")
-origins_airports = get_origins("Origin")
-destinations_states = get_destinations("DEST_STATE")
-destinations_airports = get_destinations("Dest")
+origins_states = get_origins("ORIGIN_STATE_FULL_NAME")
+origins_airports = get_origins("ORIGIN_AIRPORT_FULL_NAME")
+destinations_states = get_destinations("DEST_STATE_FULL_NAME")
+destinations_airports = get_destinations("DEST_AIRPORT_FULL_NAME")
 
 loading_style = {'position': 'absolute', 'align-self': 'center'}
 
@@ -448,31 +447,18 @@ mean_dep_del_per_origin_plot = html.Div(
     ]
 )
 
-delay_groups_plot = html.Div(
+flights_per_selected_place_plot = html.Div(
     className='plot-container',
     style={'margin-left': '4%', 'margin-right': '4%'},
     children=[
-        html.H2('Delay groups widget',style={'text-align': 'center'}),
-        dbc.Row([
-            html.Div(
-                dcc.RadioItems(
-                        id='aggregation-level-dest-delay-group',
-                        options=[
-                            {'label': 'Daily', 'value': 'Daily'},
-                            {'label': 'Weekly', 'value': 'Weekly'},
-                            {'label': 'Monthly', 'value': 'Monthly'},
-                        ],
-                        value="Daily"
-                    ),
-            )
-        ]),
+        html.H2('Number of flights widget',style={'text-align': 'center'}),
         html.Br(),
         dbc.Row([
             html.Div(
                 dcc.Dropdown(
-                    ['Destination state', 'Destination airport'],
-                    id='selected-dest-type-del-group',
-                    value="Destination state",
+                    ['Origin state', 'Origin airport', 'Destination state', 'Destination airport'],
+                    id='selected-place-type-time-series',
+                    value="Origin state",
                     clearable=False
                 ),
             )
@@ -481,8 +467,8 @@ delay_groups_plot = html.Div(
         dbc.Row([
             html.Div(
                 dcc.Dropdown(
-                    destinations_states,
-                    id='selected-dest-del-group',
+                    origins_states,
+                    id='selected-place-time-series',
                     clearable=False
                 )
             )
@@ -494,11 +480,11 @@ delay_groups_plot = html.Div(
                      children=[
                          html.Button(
                              'Update',
-                             id='button-dest-delay-group',
+                             id='button-flights-time-series',
                              n_clicks=0,
                              style={'flex-grow': '1'}
                          ),
-                         dcc.Loading(id='loading-dest-delay-group',
+                         dcc.Loading(id='loading-flights-time-series',
                                      parent_style=loading_style)
                      ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
                  ),
@@ -508,7 +494,7 @@ delay_groups_plot = html.Div(
                 html.Div([
                     get_graph(
                         'plot',
-                        id='dest-delay-group-plot',
+                        id='flights-per-selected-place-time-series-plot',
                         config=plot_config,
                         figure={}
                     ),
@@ -517,6 +503,7 @@ delay_groups_plot = html.Div(
             ),
     ]
 )
+
 
 about_app = html.Div(
     children=[
@@ -614,7 +601,7 @@ app.layout = html.Div(
         facet_plot_x_places,
         mean_arr_del_per_dest_plot,
         mean_dep_del_per_origin_plot,
-        delay_groups_plot
+        flights_per_selected_place_plot
     ])
 
 @app.callback(
@@ -765,30 +752,35 @@ def update_graph(aggregation_level, origin_type, selected_origin, n_clicks):
 
     return ret, new_loading_style
 
-
 @app.callback(
-    dash.dependencies.Output('selected-dest-del-group', 'options'),
-    dash.dependencies.Input('selected-dest-type-del-group', 'value')
+    dash.dependencies.Output('selected-place-time-series', 'options'),
+    dash.dependencies.Input('selected-place-type-time-series', 'value')
 )
-def update_available_dest_dropdown_delay_groups(selected_dest_type):
-    return destinations_states if selected_dest_type == "Destination state" else destinations_airports
+def update_available_dest_dropdown_time_series(selected_place_type):
+    if selected_place_type == "Destination state":
+        return destinations_states
+    elif selected_place_type == "Destination airport":
+        return destinations_airports
+    elif selected_place_type == "Origin state":
+        return origins_states
+    else:
+        return origins_airports
 
 @app.callback(
-    [Output('dest-delay-group-plot', 'figure'), Output('loading-dest-delay-group', 'parent_style')],
-    [State('aggregation-level-dest-delay-group', 'value'),
-    State('selected-dest-type-del-group', 'value'),
-    State('selected-dest-del-group', 'value'),
-    Input('button-dest-delay-group', 'n_clicks')
+    [Output('flights-per-selected-place-time-series-plot', 'figure'), Output('loading-flights-time-series', 'parent_style')],
+    [State('selected-place-type-time-series', 'value'),
+    State('selected-place-time-series', 'value'),
+    Input('button-flights-time-series', 'n_clicks')
     ])
-def update_graph(aggregation_level, dest_type, selected_dest, n_clicks):
+def update_graph(place_column_type, selected_place, n_clicks):
     new_loading_style = loading_style
-    dest_column_real_name = get_column_alias_key(dest_type)
-    key = str(aggregation_level)+ str(dest_column_real_name) + str(selected_dest) + "group-delay"
+    place_column_real_name = get_column_alias_key(place_column_type)
+    key = str(place_column_real_name)+ str(selected_place) + "time-series"
 
     if key in cache:
         ret = cache[key]
     else:
-        ret = plot_delay_groups(df, selected_dest, dest_column_real_name, aggregation_level)
+        ret = plot_num_of_flights_facet(df, selected_place, place_column_real_name)
         cache[key] = ret
     
     return ret, new_loading_style

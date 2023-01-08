@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import numpy as np
 
 from spark_api import compute_x_places_by_interval, compute_flights_per_place, get_column_aliases, get_column_per_agg_level,\
-                        compute_mean_arr_delay_per_dest, compute_mean_dep_delay_per_origin, compute_delay_groups, compute_delay_matrix
+                        compute_mean_arr_delay_per_dest, compute_mean_dep_delay_per_origin,  compute_flights_per_selected_place
 
 from plotly.subplots import make_subplots
 
@@ -32,9 +32,8 @@ def pie_plot_by_interval(flights_df, x, start_month, end_month, start_day, end_d
                                         "sum of Count": "Count"})
     return flights_pie_plot
 
-
+# si possono eseguirei in parallelo le prime due query 
 def facet_plot_over_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by):
-    # top x o bottom x
     places = compute_x_places_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by)
     places = np.array(places.select(place_attribute).collect()).reshape(-1)
     flights_per_place  = compute_flights_per_place(flights_df, start_month, end_month, start_day, end_day, place_attribute)
@@ -78,15 +77,8 @@ def plot_mean_dep_delay_per_origin(flights_df, origins, origin_attribute, aggreg
                                                   "avg(DepDelayMinutes)": "Average departure delay (Minutes)"})
     return mean_dep_delay_plot
 
-def plot_delay_groups(flights_df, destination, dest_attribute, aggregation_level):
-    delay_groups = compute_delay_groups(flights_df, destination, dest_attribute, aggregation_level)
-    period = column_per_aggregation_level[aggregation_level]
-    delay_groups = delay_groups.withColumnRenamed("count", "Count")
-    delay_groups_plot = px.bar(delay_groups.toPandas(), x=period, y="Count", color='DepDel15')
-    return delay_groups_plot
-
-def plot_scatter_delay_matrix(flights_df, airport_dest):
-    delay_matrix = compute_delay_matrix(flights_df, airport_dest)
-    delay_matrix_pd = delay_matrix.toPandas()
-    matrix_scatter_plot = px.scatter_matrix(delay_matrix_pd, dimensions=["Avg arrival delay", "Avg departure delay"], color="Destination airport")
-    matrix_scatter_plot.show()
+def plot_num_of_flights_facet(flights_df, place, place_column):
+    num_of_flights_per_selected_place = compute_flights_per_selected_place(flights_df, place_column, place)
+    num_of_flights_facet_plot = px.line(num_of_flights_per_selected_place.toPandas(), x="FlightDate", y="count", 
+                                        labels = {"count": "Count"})
+    return num_of_flights_facet_plot
