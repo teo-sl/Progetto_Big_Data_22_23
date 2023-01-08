@@ -9,10 +9,10 @@ import pandas as pd
 import pickle
 
 
-from plots_api import matrix_plot, origin_dest_plot, plot_reporting_airlines, \
-                      plot_routes, plot_scatter, plot_states_map, plot_textual
+from plots_api import facet_plot_over_interval, matrix_plot, origin_dest_plot, pie_plot_by_interval, plot_mean_arr_delay_per_dest, plot_mean_dep_delay_per_origin, plot_num_of_flights_facet, plot_reporting_airlines, \
+                      plot_routes, plot_scatter, plot_states_map, plot_textual, plot_x_places_by_interval
 
-from spark_api import get_dates, load_cache, load_dataset
+from spark_api import get_column_alias_key, get_column_aliases, get_dates, get_destinations, get_origins, load_cache, load_dataset
 
 
 ####### LOAD DATA #######
@@ -21,6 +21,17 @@ cache = load_cache()
 df = load_dataset()
 dates = get_dates()
 airports = pd.read_csv("util/airports.csv")
+
+
+column_aliases_values = get_column_aliases().values()
+
+days = [1 for i in range(31)]
+months = {1:"Jan", 2:"Feb", 3:"March", 4:"April", 5:"May", 6:"June", 7:"July", 8:"August", 9:"September", 10:"October", 11:"November", 12:"December"}
+
+origins_states = get_origins("ORIGIN_STATE_FULL_NAME")
+origins_airports = get_origins("ORIGIN_AIRPORT_FULL_NAME")
+destinations_states = get_destinations("DEST_STATE_FULL_NAME")
+destinations_airports = get_destinations("DEST_AIRPORT_FULL_NAME")
 
 
 ####### APP LAYOUT #######
@@ -572,6 +583,437 @@ plot7 = html.Div(
     ]
 )
 
+# create a slider to select the date range
+slider_pie = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='slider-1-pie',
+            min=1,
+            max=len(days),
+            value=[1, len(days)],
+        ),
+        dcc.RangeSlider(
+            id='slider-2-pie',
+            min=1,
+            max=len(months),
+            marks=months
+        ),
+        
+    ],
+)
+
+slider_x_places = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='slider-1-x-places',
+            min=1,
+            max=len(days),
+            value=[1, len(days)],
+        ),
+        dcc.RangeSlider(
+            id='slider-2-x-places',
+            min=1,
+            max=len(months),
+            marks=months
+        ),
+        
+    ],
+)
+
+slider_facet_plot_x_places = html.Div(
+    className='slider-container',
+    children=[
+        html.H4('Select a date range'),
+        dcc.RangeSlider(
+            id='slider-1-facet-x-places',
+            min=1,
+            max=len(days),
+            value=[1, len(days)],
+        ),
+        dcc.RangeSlider(
+            id='slider-2-facet-x-places',
+            min=1,
+            max=len(months),
+            marks=months
+        ),
+    ],
+)
+
+pie_plot = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Pie widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Top', 'Bottom'],
+                    id='sort-by-dropdown-pie',
+                    value="Top",
+                    clearable=False
+                ))
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ["Destination state", "Destination airport", "Origin state", "Origin airport"],
+                    id='selected-place-column-type-by-pie',
+                    value="Destination state",
+                    clearable=False
+                ))
+        ]),
+        html.Br(),
+        dbc.Row([
+                 slider_pie,
+                 html.Br(),
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-pie-fil',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-pie',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+        dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='pie-plot',
+                        config=plot_config,
+                        figure={}#origin_dest_plot(df, dates[0], dates[100], 'count'),
+                        # layout=default_layout,
+                    ),
+                ])
+        ),
+    ]
+)
+
+hist_plot_x_places = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Top/bottom x places widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Top', 'Bottom'],
+                    id='sort-by-dropdown-x-places',
+                    value="Top",
+                    clearable=False
+                ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ["Destination state", "Destination airport", "Origin state", "Origin airport"],
+                    id='selected-place-column-type-hist',
+                    value="Destination state",
+                    clearable=False
+                ))
+        ]),
+        html.Br(),
+        dbc.Row([
+                 slider_x_places,
+                 html.Br(),
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-hist-x',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-hist-x',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+        dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='hist-x-plot',
+                        config=plot_config,
+                        figure={}
+                    ),
+                ])
+        ),
+    ]
+)
+
+facet_plot_x_places = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Facet plot of top/bottom x places widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Top', 'Bottom'],
+                    id='sort-by-dropdown-facet-x-places',
+                    value="Top",
+                    clearable=False
+                ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ["Destination state", "Destination airport", "Origin state", "Origin airport"],
+                    id='selected-place-column-type-facet',
+                    value="Destination state",
+                    clearable=False
+                ))
+        ]),
+        html.Br(),
+        dbc.Row([
+                 slider_facet_plot_x_places,
+                 html.Br(),
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-facet-x-places',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-facet-x',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+            dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='facet-x-plot',
+                        config=plot_config,
+                        figure={}
+                    ),
+                ])
+            ),
+    ]
+)
+
+mean_arr_del_per_dest_plot = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Mean arrival delay per destination widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                dcc.RadioItems(
+                        id='aggregation-level-arr-delay',
+                        options=[
+                            {'label': 'Daily', 'value': 'Daily'},
+                            {'label': 'Weekly', 'value': 'Weekly'},
+                            {'label': 'Monthly', 'value': 'Monthly'},
+                        ],
+                        value="Daily"
+                    ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Destination state', 'Destination airport'],
+                    id='selected-dest-type-arr-del',
+                    value="Destination state",
+                    clearable=False
+                )
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    destinations_states,
+                    id='selected-dest-arr-del',
+                    value='Utah',
+                    clearable=False
+                )
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-arr-delay',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-arr-delay',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+            dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='arr-delay-plot',
+                        config=plot_config,
+                        figure={}
+                    ),
+    
+                ])
+            ),
+    ]
+)
+
+mean_dep_del_per_origin_plot = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Mean departure delay per origin widget',style={'text-align': 'center'}),
+        dbc.Row([
+            html.Div(
+                dcc.RadioItems(
+                        id='aggregation-level-dep-delay',
+                        options=[
+                            {'label': 'Daily', 'value': 'Daily'},
+                            {'label': 'Weekly', 'value': 'Weekly'},
+                            {'label': 'Monthly', 'value': 'Monthly'},
+                        ],
+                        value="Daily"
+                    ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Origin state', 'Origin airport'],
+                    id='selected-origin-type-dep-del',
+                    value="Origin state",
+                    clearable=False
+                ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    origins_states,
+                    id='selected-origin-dep-del',
+                    value='Utah',
+                    clearable=False
+                )
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-dep-delay',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-dep-delay',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+            dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='dep-delay-plot',
+                        config=plot_config,
+                        figure={}
+                    ),
+    
+                ])
+            ),
+    ]
+)
+
+flights_per_selected_place_plot = html.Div(
+    className='plot-container',
+    style={'margin-left': '4%', 'margin-right': '4%'},
+    children=[
+        html.H2('Number of flights widget',style={'text-align': 'center'}),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    ['Origin state', 'Origin airport', 'Destination state', 'Destination airport'],
+                    id='selected-place-type-time-series',
+                    value="Origin state",
+                    clearable=False
+                ),
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+            html.Div(
+                dcc.Dropdown(
+                    origins_states,
+                    id='selected-place-time-series',
+                    value='Utah',
+                    clearable=False
+                )
+            )
+        ]),
+        html.Br(),
+        dbc.Row([
+                 html.Div(
+                     className='control-panel',
+                     children=[
+                         html.Button(
+                             'Update',
+                             id='button-flights-time-series',
+                             n_clicks=0,
+                             style={'flex-grow': '1'}
+                         ),
+                         dcc.Loading(id='loading-flights-time-series',
+                                     parent_style=loading_style)
+                     ], style={'position': 'relative', 'display': 'flex', 'justify-content': 'center'}
+                 ),
+            ]),
+        html.Br(),
+            dbc.Row(
+                html.Div([
+                    get_graph(
+                        'plot',
+                        id='flights-per-selected-place-time-series-plot',
+                        config=plot_config,
+                        figure={}
+                    ),
+    
+                ])
+            ),
+    ]
+)
+
 ###### APP HEADER ########
 
 about_app = html.Div(
@@ -702,6 +1144,30 @@ app.layout = html.Div(
         html.Hr(style = {'border': '5px solid black'}),
 
         plot7,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        pie_plot,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        hist_plot_x_places,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        facet_plot_x_places,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        mean_arr_del_per_dest_plot,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        mean_dep_del_per_origin_plot,
+
+        html.Hr(style = {'border': '5px solid black'}),
+
+        flights_per_selected_place_plot
     ])
 
 
@@ -893,6 +1359,180 @@ def update_text(date_range,n_clics):
     ret[4] = ret[4]+' minutes'
 
     return ret[0],ret[1],ret[2],ret[3],ret[4],new_loading_style,title_text
+
+
+@app.callback(
+    [Output('pie-plot', 'figure'), Output('loading-pie', 'parent_style')],
+    [State('slider-1-pie', 'value'),
+        State('slider-2-pie', 'value'),
+        State('selected-place-column-type-by-pie', 'value'),
+        State('sort-by-dropdown-pie', 'value'),
+        Input('button-pie-fil', 'n_clicks')
+     ])
+def update_graph(selected_day, selected_month, selected_place_column, sort_by, n_clicks):
+    start_day = selected_day[0]
+    end_day = selected_day[1]
+    start_month, end_month = 1, 12
+    if (selected_month is not None):
+        start_month = selected_month[0]
+        end_month = selected_month[1]
+
+    new_loading_style = loading_style
+    column_real_name = get_column_alias_key(selected_place_column)
+    key = str(start_day)+ ' '+str(end_day) + ' '+str(start_month) +' '+ str(end_month) + ' '+str(column_real_name) + ' '+str(sort_by) +' '+ "pie"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = pie_plot_by_interval(df, 10, start_month, end_month, start_day, end_day, column_real_name, sort_by)
+        cache[key] = ret
+
+    return ret, new_loading_style
+
+@app.callback(
+    [Output('hist-x-plot', 'figure'), Output('loading-hist-x', 'parent_style')],
+    [State('slider-1-x-places', 'value'),
+        State('slider-2-x-places', 'value'),
+        State('selected-place-column-type-hist', 'value'),
+        State('sort-by-dropdown-x-places', 'value'),
+        Input('button-hist-x', 'n_clicks')
+     ])
+def update_graph(selected_day, selected_month, selected_place_column, sort_by, n_clicks):
+    start_day = selected_day[0]
+    end_day = selected_day[1]
+    start_month, end_month = 1, 12
+    if (selected_month is not None):
+        start_month = selected_month[0]
+        end_month = selected_month[1]
+
+    new_loading_style = loading_style
+    column_real_name = get_column_alias_key(selected_place_column)
+    key = str(start_day)+' '+ str(end_day) +' '+ str(start_month) +' '+ str(end_month) +' '+ str(column_real_name) + ' '+str(sort_by) +' '+ "hist"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_x_places_by_interval(df, 10, start_month, end_month, start_day, end_day, column_real_name, sort_by)
+        cache[key] = ret
+
+    return ret, new_loading_style
+
+@app.callback(
+    [Output('facet-x-plot', 'figure'), Output('loading-facet-x', 'parent_style')],
+    [State('slider-1-facet-x-places', 'value'),
+        State('slider-2-facet-x-places', 'value'),
+        State('selected-place-column-type-facet', 'value'),
+        State('sort-by-dropdown-facet-x-places', 'value'),
+        Input('button-facet-x-places', 'n_clicks')
+     ])
+def update_graph(selected_day, selected_month, selected_place_column, sort_by, n_clicks):
+    start_day = selected_day[0]
+    end_day = selected_day[1]
+    start_month, end_month = 1, 12
+    if (selected_month is not None):
+        start_month = selected_month[0]
+        end_month = selected_month[1]
+    
+    new_loading_style = loading_style
+    column_real_name = get_column_alias_key(selected_place_column)
+    key = str(start_day)+' '+ str(end_day) +' '+ str(start_month) + ' '+str(end_month) + ' '+str(column_real_name) +' '+ str(sort_by) +' '+ "facet"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = facet_plot_over_interval(df, 10, start_month, end_month, start_day, end_day, column_real_name, sort_by)
+        cache[key] = ret
+
+    return ret, new_loading_style
+
+
+@app.callback(
+    dash.dependencies.Output('selected-dest-arr-del', 'options'),
+    dash.dependencies.Input('selected-dest-type-arr-del', 'value')
+)
+def update_available_dest_dropdown_arr_delay(selected_dest_type):
+    return destinations_states if selected_dest_type == "Destination state" else destinations_airports
+
+
+@app.callback(
+    [Output('arr-delay-plot', 'figure'), Output('loading-arr-delay', 'parent_style')],
+    [State('aggregation-level-arr-delay', 'value'),
+        State('selected-dest-type-arr-del', 'value'),
+        State('selected-dest-arr-del', 'value'),
+        Input('button-arr-delay', 'n_clicks')
+     ])
+def update_graph(aggregation_level, dest_type, selected_dest, n_clicks):
+    new_loading_style = loading_style
+    dest_column_real_name = get_column_alias_key(dest_type)
+    key = str(aggregation_level) + ' '+str(dest_column_real_name) +' '+ str(selected_dest) + ' '+"arr-delay"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_mean_arr_delay_per_dest(df, selected_dest,  dest_column_real_name, aggregation_level)
+        cache[key] = ret
+    
+    return ret, new_loading_style
+
+@app.callback(
+    dash.dependencies.Output('selected-origin-dep-del', 'options'),
+    dash.dependencies.Input('selected-origin-type-dep-del', 'value')
+)
+def update_available_origins_dropdown(selected_origin_type):
+    return origins_states if selected_origin_type == "Origin state" else origins_airports
+
+@app.callback(
+    [Output('dep-delay-plot', 'figure'), Output('loading-dep-delay', 'parent_style')],
+    [State('aggregation-level-dep-delay', 'value'),
+    State('selected-origin-type-dep-del', 'value'),
+    State('selected-origin-dep-del', 'value'),
+    Input('button-dep-delay', 'n_clicks')
+    ])
+def update_graph(aggregation_level, origin_type, selected_origin, n_clicks):
+    new_loading_style = loading_style
+    origin_column_real_name = get_column_alias_key(origin_type)
+    key = str(aggregation_level) +' '+str(origin_column_real_name) +' '+str(selected_origin) +' '+ "dep-delay"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_mean_dep_delay_per_origin(df, selected_origin, origin_column_real_name, aggregation_level)
+        cache[key] = ret
+
+    return ret, new_loading_style
+
+@app.callback(
+    dash.dependencies.Output('selected-place-time-series', 'options'),
+    dash.dependencies.Input('selected-place-type-time-series', 'value')
+)
+def update_available_dest_dropdown_time_series(selected_place_type):
+    if selected_place_type == "Destination state":
+        return destinations_states
+    elif selected_place_type == "Destination airport":
+        return destinations_airports
+    elif selected_place_type == "Origin state":
+        return origins_states
+    else:
+        return origins_airports
+
+@app.callback(
+    [Output('flights-per-selected-place-time-series-plot', 'figure'), Output('loading-flights-time-series', 'parent_style')],
+    [State('selected-place-type-time-series', 'value'),
+    State('selected-place-time-series', 'value'),
+    Input('button-flights-time-series', 'n_clicks')
+    ])
+def update_graph(place_column_type, selected_place, n_clicks):
+    new_loading_style = loading_style
+    place_column_real_name = get_column_alias_key(place_column_type)
+    key = str(place_column_real_name)+' '+ str(selected_place) + ' '+"time-series"
+
+    if key in cache:
+        ret = cache[key]
+    else:
+        ret = plot_num_of_flights_facet(df, selected_place, place_column_real_name)
+        cache[key] = ret
+    
+    return ret, new_loading_style
 
 ##### APP RUN #######
 

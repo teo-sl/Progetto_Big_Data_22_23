@@ -3,9 +3,11 @@
 import plotly.express as px
 import plotly.graph_objs as go
 import pandas as pd
+import numpy as np
 from pyspark.sql.functions import *
+from plotly.subplots import make_subplots
 
-from spark_api import matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, \
+from spark_api import compute_flights_per_place, compute_flights_per_selected_place, compute_mean_arr_delay_per_dest, compute_mean_dep_delay_per_origin, compute_x_places_by_interval, get_column_aliases, get_column_per_agg_level, matrix_agg, origin_dest_query, reporting_airlines_queries, routes_queries, \
                     scatter_queries, states_map_query, textual_queries
 
 
@@ -18,6 +20,9 @@ states.columns = ["State","unk","Abbreviation"]
 airports = pd.read_csv("util/airports.csv")
 airlines = pd.read_csv("util/airlines.csv")
 cancellations = pd.read_csv("util/cancellations.csv")
+
+column_aliases = get_column_aliases()
+column_per_aggregation_level = get_column_per_agg_level()
 
 ##### FUNCTIONS #######
 
@@ -221,3 +226,76 @@ def plot_scatter(df,temp_granularity,x,y,z):
 
 def plot_textual(df,date_from, date_to):
     return textual_queries(df,date_from,date_to)
+
+
+def plot_x_places_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by):
+    places = compute_x_places_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by)
+    place_column_alias = column_aliases[place_attribute]
+    title = str(sort_by) + " " + str(x) + " " + place_column_alias
+    x_places_hist_plot = px.histogram(places.toPandas(), x=place_attribute, y="Count", color=px.colors.qualitative.Vivid[0:x], title=title,
+                                   labels = {
+                                            place_attribute: place_column_alias,
+                                            "sum of Count": "Count"})
+    x_places_hist_plot.update_layout(showlegend=False) 
+    return x_places_hist_plot
+
+def pie_plot_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by):
+    places = compute_x_places_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by)
+    place_column_alias = column_aliases[place_attribute]
+    title = sort_by + " " + str(x) + " " + place_column_alias 
+    flights_pie_plot = px.pie(places.toPandas(), values='Count', names=place_attribute, title=title,
+                              labels = { 
+                                        place_attribute: place_column_alias,
+                                        "sum of Count": "Count"})
+    return flights_pie_plot
+
+# si possono eseguirei in parallelo le prime due query 
+def facet_plot_over_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by):
+    places = compute_x_places_by_interval(flights_df, x, start_month, end_month, start_day, end_day, place_attribute, sort_by)
+    places = np.array(places.select(place_attribute).collect()).reshape(-1)
+    flights_per_place  = compute_flights_per_place(flights_df, start_month, end_month, start_day, end_day, place_attribute)
+    fig = make_subplots(rows=x, cols=1) 
+
+    for i in range(len(places)):
+        place = places[i]
+        flights_per_place_i = flights_per_place.filter(flights_per_place[place_attribute] == place)
+        flights_per_place_i_pd = flights_per_place_i.toPandas()
+        place_column_alias = column_aliases[place_attribute]
+
+        fig.add_trace(
+            go.Scatter(x=flights_per_place_i_pd['FlightDate'], y=flights_per_place_i_pd['count'], 
+                        name=place),
+            row=i+1, col=1
+        )
+        
+    title = sort_by + " " + str(x) + " "  + place_column_alias 
+    fig.update_layout(height=1100, width=1200, title_text=title)
+    return fig
+
+
+def plot_mean_arr_delay_per_dest(flights_df, destinations, dest_attribute, aggregation_level):
+    mean_arr_delay_per_dest = compute_mean_arr_delay_per_dest(flights_df, destinations, dest_attribute, aggregation_level)
+    period = column_per_aggregation_level[aggregation_level]
+    y = "avg(" + "ArrDelayMinutes" + ")"
+    dest_column_alias = column_aliases[dest_attribute]
+    mean_arr_delay_plot = px.line(mean_arr_delay_per_dest.toPandas(), x=period, y=y, color=dest_attribute,
+                                        labels = {dest_attribute: dest_column_alias,
+                                                  "avg(ArrDelayMinutes)": "Average arrival delay (Minutes)"})
+    return mean_arr_delay_plot
+
+
+def plot_mean_dep_delay_per_origin(flights_df, origins, origin_attribute, aggregation_level):
+    mean_dep_delay_per_origin = compute_mean_dep_delay_per_origin(flights_df, origins, origin_attribute, aggregation_level)
+    period = column_per_aggregation_level[aggregation_level]
+    y = "avg(" + "DepDelayMinutes" + ")"
+    origin_column_alias = column_aliases[origin_attribute]
+    mean_dep_delay_plot = px.line(mean_dep_delay_per_origin.toPandas(), x=period, y=y, color=origin_attribute,
+                                        labels = {origin_attribute: origin_column_alias,
+                                                  "avg(DepDelayMinutes)": "Average departure delay (Minutes)"})
+    return mean_dep_delay_plot
+
+def plot_num_of_flights_facet(flights_df, place, place_column):
+    num_of_flights_per_selected_place = compute_flights_per_selected_place(flights_df, place_column, place)
+    num_of_flights_facet_plot = px.line(num_of_flights_per_selected_place.toPandas(), x="FlightDate", y="count", 
+                                        labels = {"count": "Count"})
+    return num_of_flights_facet_plot
