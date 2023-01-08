@@ -1,0 +1,331 @@
+,IATA,AIRPORT,CITY,STATE,COUNTRY,LATITUDE,LONGITUDE,STATE_FULL_NAME
+0,ABQ,Albuquerque International,Albuquerque,NM,USA,35.04022222,-106.6091944,New Mexico
+1,ANC,Ted Stevens Anchorage International,Anchorage,AK,USA,61.17432028,-149.9961856,Alaska
+2,ATL,William B Hartsfield-Atlanta Intl,Atlanta,GA,USA,33.64044444,-84.42694444,Georgia
+3,AUS,Austin-Bergstrom International,Austin,TX,USA,30.19453278,-97.66987194,Texas
+4,BDL,Bradley International,Windsor Locks,CT,USA,41.93887417,-72.68322833,Connecticut
+5,BHM,Birmingham International,Birmingham,AL,USA,33.56294306,-86.75354972,Alabama
+6,BNA,Nashville International,Nashville,TN,USA,36.12447667,-86.67818222,Tennessee
+7,BOS,Gen Edw L Logan Intl,Boston,MA,USA,42.3643475,-71.00517917,Massachusetts
+8,BUF,Buffalo Niagara Intl,Buffalo,NY,USA,42.94052472,-78.73216667,New York
+9,BUR,Burbank-Glendale-Pasadena,Burbank,CA,USA,34.20061917,-118.3584969,California
+10,BWI,Baltimore-Washington International,Baltimore,MD,USA,39.17540167,-76.66819833,Maryland
+11,CHS,Charleston AFB International,Charleston,SC,USA,32.89864639,-80.04050583,South Carolina
+12,CLE,Cleveland-Hopkins Intl,Cleveland,OH,USA,41.41089417,-81.84939667,Ohio
+13,CLT,Charlotte Douglas International,Charlotte,NC,USA,35.21401111,-80.94312583,North Carolina
+14,CMH,Port Columbus Intl,Columbus,OH,USA,39.99798528,-82.89188278,Ohio
+15,CVG,Cincinnati Northern Kentucky Intl,Covington,KY,USA,39.04614278,-84.6621725,Kentucky
+16,DAL,Dallas Love ,Dallas,TX,USA,32.84711389,-96.85177222,Texas
+17,DCA,Ronald Reagan Washington National,Arlington,VA,USA,38.85208333,-77.03772222,Virginia
+18,DEN,Denver Intl,Denver,CO,USA,39.85840806,-104.6670019,Colorado
+19,DFW,Dallas-Fort Worth International,Dallas-Fort Worth,TX,USA,32.89595056,-97.0372,Texas
+20,DTW,Detroit Metropolitan-Wayne County,Detroit,MI,USA,42.21205889,-83.34883583,Michigan
+21,ELP,El Paso International,El Paso,TX,USA,31.80666667,-106.3778056,Texas
+22,EWR,Newark Intl,Newark,NJ,USA,40.69249722,-74.16866056,New Jersey
+23,FLL,Fort Lauderdale-Hollywood Int'l,Ft. Lauderdale,FL,USA,26.07258333,-80.15275,Florida
+24,HNL,Honolulu International,Honolulu,HI,USA,21.31869111,-157.9224072,Hawaii
+25,HOU,William P X,Houston,TX,USA,29.64541861,-95.27888889,Texas
+26,IAD,Washington Dulles International,Chantilly,VA,USA,38.94453194,-77.45580972,Virginia
+27,IAH,George Bush Intercontinental,Houston,TX,USA,29.98047222,-95.33972222,Texas
+28,IND,Indianapolis International,Indianapolis,IN,USA,39.71732917,-86.29438417,Indiana
+29,JAX,Jacksonville International,Jacksonville,FL,USA,30.49405556,-81.68786111,Florida
+30,JFK,John F Kennedy Intl,New York,NY,USA,40.63975111,-73.77892556,New York
+31,LAS,McCarran International,Las Vegas,NV,USA,36.08036111,-115.1523333,Nevada
+32,LAX,Los Angeles International,Los Angeles,CA,USA,33.94253611,-118.4080744,California
+33,LGA,LaGuardia,New York,NY,USA,40.77724306,-73.87260917,New York
+34,LIT,Adams ,Little Rock,AR,USA,34.72939611,-92.22424556,Arkansas
+35,MCI,Kansas City International,Kansas City,MO,USA,39.29760528,-94.71390556,Missouri
+36,MCO,Orlando International,Orlando,FL,USA,28.42888889,-81.31602778,Florida
+37,MDW,Chicago Midway,Chicago,IL,USA,41.7859825,-87.75242444,Illinois
+38,MEM,Memphis International,Memphis,TN,USA,35.04241667,-89.97666667,Tennessee
+39,MIA,Miami International,Miami,FL,USA,25.79325,-80.29055556,Florida
+40,MKE,General Mitchell International,Milwaukee,WI,USA,42.94722222,-87.89658333,Wisconsin
+41,MSP,Minneapolis-St Paul Intl,Minneapolis,MN,USA,44.88054694,-93.2169225,Minnesota
+42,MSY,New Orleans International ,New Orleans,LA,USA,29.99338889,-90.25802778,Louisiana
+43,OAK,Metropolitan Oakland International,Oakland,CA,USA,37.72129083,-122.2207167,California
+44,OGG,Kahului,Kahului,HI,USA,20.89864972,-156.4304578,Hawaii
+45,OKC,Will Rogers World,Oklahoma City,OK,USA,35.39308833,-97.60073389,Oklahoma
+46,OMA,Eppley Airfield,Omaha,NE,USA,41.30251861,-95.89417306,Nebraska
+47,ONT,Ontario International,Ontario,CA,USA,34.056,-117.6011944,California
+48,ORD,Chicago O'Hare International,Chicago,IL,USA,41.979595,-87.90446417,Illinois
+49,ORF,Norfolk International,Norfolk,VA,USA,36.89461111,-76.20122222,Virginia
+50,PBI,Palm Beach International,West Palm Beach,FL,USA,26.68316194,-80.09559417,Florida
+51,PDX,Portland Intl,Portland,OR,USA,45.58872222,-122.5975,Oregon
+52,PHL,Philadelphia Intl,Philadelphia,PA,USA,39.87195278,-75.24114083,Pennsylvania
+53,PHX,Phoenix Sky Harbor International,Phoenix,AZ,USA,33.43416667,-112.0080556,Arizona
+54,PIT,Pittsburgh International,Pittsburgh,PA,USA,40.49146583,-80.23287083,Pennsylvania
+55,PVD,Theodore F Green State,Providence,RI,USA,41.72399917,-71.42822111,Rhode Island
+56,RDU,Raleigh-Durham International,Raleigh,NC,USA,35.87763889,-78.78747222,North Carolina
+57,RIC,Richmond International,Richmond,VA,USA,37.50516667,-77.31966667,Virginia
+58,RNO,Reno Tahoe International,Reno,NV,USA,39.49857611,-119.7680647,Nevada
+59,RSW,Southwest Florida International,Ft. Myers,FL,USA,26.53616667,-81.75516667,Florida
+60,SAN,San Diego International-Lindbergh ,San Diego,CA,USA,32.73355611,-117.1896567,California
+61,SAT,San Antonio International,San Antonio,TX,USA,29.53369444,-98.46977778,Texas
+62,SDF,Louisville International-Standiford ,Louisville,KY,USA,38.17438889,-85.736,Kentucky
+63,SEA,Seattle-Tacoma Intl,Seattle,WA,USA,47.44898194,-122.3093131,Washington
+64,SFO,San Francisco International,San Francisco,CA,USA,37.61900194,-122.3748433,California
+65,SJC,San Jose International,San Jose,CA,USA,37.36186194,-121.9290089,California
+66,SLC,Salt Lake City Intl,Salt Lake City,UT,USA,40.78838778,-111.9777731,Utah
+67,SMF,Sacramento International,Sacramento,CA,USA,38.69542167,-121.5907669,California
+68,SNA,John Wayne  Orange Co,Santa Ana,CA,USA,33.67565861,-117.8682225,California
+69,STL,Lambert-St Louis International,St Louis,MO,USA,38.74768694,-90.35998972,Missouri
+70,TPA,Tampa International ,Tampa,FL,USA,27.97547222,-82.53325,Florida
+71,TUL,Tulsa International,Tulsa,OK,USA,36.19837222,-95.88824167,Oklahoma
+72,TUS,Tucson International,Tucson,AZ,USA,32.11608333,-110.9410278,Arizona
+73,ABE,Lehigh Valley International,Allentown,PA,USA,40.65236278,-75.44040167,Pennsylvania
+74,ABI,Abilene Regional,Abilene,TX,USA,32.41132,-99.68189722,Texas
+75,ABR,Aberdeen Regional,Aberdeen,SD,USA,45.44905556,-98.42183333,South Dakota
+76,ABY,Southwest Georgia Regional,Albany,GA,USA,31.535515,-84.19447333,Georgia
+77,ACK,Nantucket Memorial,Nantucket,MA,USA,41.25305194,-70.06018139,Massachusetts
+78,ACT,Waco Regional,Waco,TX,USA,31.61128833,-97.23051917,Texas
+79,ACV,Arcata,Arcata Eureka,CA,USA,40.97811528,-124.1086189,California
+80,ACY,Atlantic City International,Atlantic City,NJ,USA,39.45758333,-74.57716667,New Jersey
+81,ADK,Adak,Adak,AK,USA,51.87796389,-176.6460306,Alaska
+82,ADQ,Kodiak ,Kodiak,AK,USA,57.74996778,-152.4938553,Alaska
+83,AEX,Alexandria International,Alexandria,LA,USA,31.32737167,-92.54855611,Louisiana
+84,AGS,Bush ,Augusta,GA,USA,33.369955,-81.96449611,Georgia
+85,AKN,King Salmon,King Salmon,AK,USA,58.67680167,-156.6492175,Alaska
+86,ALB,Albany Cty,Albany,NY,USA,42.74811944,-73.80297861,New York
+87,ALO,Waterloo Municipal,Waterloo,IA,USA,42.55708139,-92.40034361,Iowa
+88,AMA,Amarillo International,Amarillo,TX,USA,35.2193725,-101.7059272,Texas
+89,APN,Alpena County Regional ,Alpena,MI,USA,45.0780675,-83.56028583,Michigan
+90,ART,Watertown Intl,Watertown,NY,USA,43.99192222,-76.02173861,New York
+91,ASE,Aspen-Pitkin Co Sardy ,Aspen,CO,USA,39.22316,-106.868845,Colorado
+92,ATW,Outagamie County Regional,Appleton,WI,USA,44.25740806,-88.51947556,Wisconsin
+93,AVL,Asheville Regional,Asheville,NC,USA,35.43619444,-82.54180556,North Carolina
+94,AVP,Wilkes-Barre Scranton Intl,Wilkes-Barre Scranton,PA,USA,41.33814944,-75.7242675,Pennsylvania
+95,AZO,Kalamazoo County,Kalamazoo,MI,USA,42.234875,-85.5520575,Michigan
+96,BET,Bethel,Bethel,AK,USA,60.77977639,-161.8379975,Alaska
+97,BFL,Meadows ,Bakersfield,CA,USA,35.43359806,-119.0567681,California
+98,BGM,Binghamton Regional,Binghamton,NY,USA,42.20848278,-75.97961361,New York
+99,BGR,Bangor International,Bangor,ME,USA,44.80744444,-68.82813889,Maine
+100,BIL,Billings Logan Intl,Billings,MT,USA,45.8076625,-108.5428611,Montana
+101,BIS,Bismarck Municipal,Bismarck,ND,USA,46.77411111,-100.7467222,North Dakota
+102,BJI,Bemidji-Beltrami County,Bemidji,MN,USA,47.50942417,-94.93372333,Minnesota
+103,BLI,Bellingham Intl,Bellingham,WA,USA,48.79275,-122.5375278,Washington
+104,BMI,Central Illinois Regional,Bloomington,IL,USA,40.47798556,-88.91595278,Illinois
+105,BOI,Boise Air Terminal,Boise,ID,USA,43.56444444,-116.2227778,Idaho
+106,BPT,Southeast Texas Regional,Beaumont Port Arthur,TX,USA,29.95083333,-94.02069444,Texas
+107,BQK,Glynco Jetport,Brunswick,GA,USA,31.25902778,-81.46630556,Georgia
+108,BRD,Brainerd-Crow Wing County Regional,Brainerd,MN,USA,46.39785806,-94.1372275,Minnesota
+109,BRO,Brownsville S.Padre Island International,Brownsville,TX,USA,25.90683333,-97.42586111,Texas
+110,BRW,Wiley Post Will Rogers Memorial,Barrow,AK,USA,71.2854475,-156.7660019,Alaska
+111,BTM,Bert Mooney,Butte,MT,USA,45.95479528,-112.49746,Montana
+112,BTR,Baton Rouge Metropolitan,Baton Rouge,LA,USA,30.53316083,-91.14963444,Louisiana
+113,BTV,Burlington International,Burlington,VT,USA,44.47300361,-73.1503125,Vermont
+114,BZN,Gallatin ,Bozeman,MT,USA,45.77690139,-111.1530072,Montana
+115,CAE,Columbia Metropolitan,Columbia,SC,USA,33.93884,-81.11953944,South Carolina
+116,CAK,Akron-Canton Regional,Akron,OH,USA,40.91631194,-81.44246556,Ohio
+117,CDC,Cedar City Muni,Cedar City,UT,USA,37.70097028,-113.098575,Utah
+118,CDV,Merle K (Mudhole) Smith,Cordova,AK,USA,60.49183389,-145.4776503,Alaska
+119,CEC,Jack McNamara ,Crescent City,CA,USA,41.78015722,-124.2365333,California
+120,CHA,Lovell ,Chattanooga,TN,USA,35.03526833,-85.20378778,Tennessee
+121,CHO,Charlottesville-Albermarle,Charlottesville,VA,USA,38.13863889,-78.45286111,Virginia
+122,CIC,Chico Municipal,Chico,CA,USA,39.79538278,-121.8584231,California
+123,CID,Eastern Iowa ,Cedar Rapids,IA,USA,41.88458833,-91.71087222,Iowa
+124,CIU,Chippewa County International,Sault Ste. Marie,MI,USA,46.25075194,-84.47238528,Michigan
+125,CLL,Easterwood ,College Station,TX,USA,30.58858944,-96.36382417,Texas
+126,CMI,University of Illinois-Willard,Champaign Urbana,IL,USA,40.03925,-88.27805556,Illinois
+127,CMX,Houghton County Memorial,Hancock,MI,USA,47.16841722,-88.48906083,Michigan
+128,CNY,Canyonlands ,Moab,UT,USA,38.75495611,-109.7548439,Utah
+129,COD,Yellowstone Regional,Cody,WY,USA,44.52019417,-109.0237961,Wyoming
+130,COS,City of Colorado Springs Muni,Colorado Springs,CO,USA,38.80580556,-104.70025,Colorado
+131,COU,Columbia Regional,Columbia,MO,USA,38.81809306,-92.21962917,Missouri
+132,CPR,Natrona County Intl,Casper,WY,USA,42.90835556,-106.4644661,Wyoming
+133,CRP,Corpus Christi International,Corpus Christi,TX,USA,27.77036083,-97.50121528,Texas
+134,CRW,Yeager,Charleston,WV,USA,38.37315083,-81.59318972,West Virginia
+135,CSG,Columbus Metropolitan,Columbus,GA,USA,32.51633333,-84.93886111,Georgia
+136,CWA,Central Wisconsin,Mosinee,WI,USA,44.77761917,-89.66677944,Wisconsin
+137,CYS,Cheyenne,Cheyenne,WY,USA,41.1557225,-104.8118381,Wyoming
+138,DAB,Daytona Beach International,Daytona Beach,FL,USA,29.17991667,-81.05805556,Florida
+139,DAY,James M Cox Dayton Intl,Dayton,OH,USA,39.90237583,-84.219375,Ohio
+140,DBQ,Dubuque Municipal,Dubuque,IA,USA,42.40295944,-90.70916722,Iowa
+141,DHN,Dothan ,Dothan,AL,USA,31.32133917,-85.44962889,Alabama
+142,DIK,Dickinson Municipal,Dickinson,ND,USA,46.79738889,-102.8019528,North Dakota
+143,DLG,Dillingham,Dillingham,AK,USA,59.0454125,-158.5033389,Alaska
+144,DLH,Duluth International,Duluth,MN,USA,46.84209028,-92.19364861,Minnesota
+145,DRO,Durango-La Plata County,Durango,CO,USA,37.15151667,-107.7537692,Colorado
+146,DRT,Del Rio International,Del Rio,TX,USA,29.37181222,-100.9232339,Texas
+147,DSM,Des Moines International,Des Moines,IA,USA,41.53493306,-93.66068222,Iowa
+148,DVL,Devils Lake Municipal-Knoke ,Devils Lake,ND,USA,48.11424528,-98.90877833,North Dakota
+149,EAU,Chippewa Valley Regional,Eau Claire,WI,USA,44.86525722,-91.48507194,Wisconsin
+150,EGE,Eagle County Regional,Eagle,CO,USA,39.64256778,-106.9176953,Colorado
+151,EKO,Elko Regional,Elko,NV,USA,40.82492611,-115.7916964,Nevada
+152,ELM,Elmira Corning Regional,Elmira,NY,USA,42.15991361,-76.89144333,New York
+153,ERI,Erie Intl,Erie,PA,USA,42.08202139,-80.17621556,Pennsylvania
+154,ESC,Delta County,Escanaba,MI,USA,45.72266972,-87.09373139,Michigan
+155,EUG,Mahlon Sweet ,Eugene,OR,USA,44.12326,-123.2186856,Oregon
+156,EVV,Evansville Regional,Evansville,IN,USA,38.03799139,-87.53062667,Indiana
+157,EWN,Craven County Regional,New Bern,NC,USA,35.07297222,-77.04294444,North Carolina
+158,EYW,Key West International,Key West,FL,USA,24.55611111,-81.75955556,Florida
+159,FAI,Fairbanks International,Fairbanks,AK,USA,64.8136775,-147.8596694,Alaska
+160,FAR,Hector International,Fargo,ND,USA,46.91934889,-96.81498889,North Dakota
+161,FAT,Fresno Yosemite International,Fresno,CA,USA,36.77619444,-119.7181389,California
+162,FAY,Fayetteville Municipal,Fayetteville,NC,USA,34.99147222,-78.88,North Carolina
+163,FCA,Glacier Park Intl,Kalispell,MT,USA,48.31140472,-114.2550694,Montana
+164,FLG,Flagstaff Pulliam,Flagstaff,AZ,USA,35.13845472,-111.6712183,Arizona
+165,FLO,Florence Regional,Florence,SC,USA,34.18536111,-79.72388889,South Carolina
+166,FNT,Bishop,Flint,MI,USA,42.96550333,-83.74345639,Michigan
+167,FOE,Forbes ,Topeka,KS,USA,38.95095194,-95.66361444,Kansas
+168,FSD,Joe Foss ,Sioux Falls,SD,USA,43.58135111,-96.74170028,South Dakota
+169,FSM,Fort Smith Regional,Fort Smith,AR,USA,35.33659028,-94.36744111,Arkansas
+170,FWA,Fort Wayne International,Fort Wayne,IN,USA,40.97846583,-85.19514639,Indiana
+171,GCC,Gillette-Campbell County,Gillette,WY,USA,44.34889806,-105.5393614,Wyoming
+172,GCK,Garden City Regional,Garden City,KS,USA,37.92751556,-100.7244147,Kansas
+173,GEG,Spokane Intl,Spokane,WA,USA,47.61985556,-117.5338425,Washington
+174,GFK,Grand Forks International,Grand Forks,ND,USA,47.949255,-97.17611111,North Dakota
+175,GGG,Gregg County,Longview,TX,USA,32.38486111,-94.71171,Texas
+176,GJT,Walker ,Grand Junction,CO,USA,39.1224125,-108.5267347,Colorado
+177,GNV,Gainesville Regional,Gainesville,FL,USA,29.69005556,-82.27177778,Florida
+178,GPT,Gulfport-Biloxi Regional,Gulfport-Biloxi,MS,USA,30.40728028,-89.07009278,Mississippi
+179,GRB,Austin Straubel International,Green Bay,WI,USA,44.48507333,-88.12959,Wisconsin
+180,GRI,Central Nebraska Regional ,Grand Island,NE,USA,40.96747222,-98.30861111,Nebraska
+181,GRK,Robert Gray AAF,Killeen,TX,USA,31.06489778,-97.82779778,Texas
+182,GRR,Kent County International,Grand Rapids,MI,USA,42.88081972,-85.52276778,Michigan
+183,GSO,Piedmont Triad International,Greensboro,NC,USA,36.09774694,-79.9372975,North Carolina
+184,GSP,Greenville-Spartanburg,Greer,SC,USA,34.89566722,-82.21885833,South Carolina
+185,GST,Gustavus,Gustavus,AK,USA,58.42438139,-135.7073814,Alaska
+186,GTF,Great Falls Intl,Great Falls,MT,USA,47.48200194,-111.3706853,Montana
+187,GTR,Golden Triangle Regional,Columbus-Starkville-West Point,MS,USA,33.45033444,-88.59136861,Mississippi
+188,GUC,Gunnison County,Gunnison,CO,USA,38.53396333,-106.9331817,Colorado
+189,HDN,Yampa Valley,Hayden,CO,USA,40.48118028,-107.2176597,Colorado
+190,HIB,Chisholm-Hibbing,Hibbing,MN,USA,47.38659917,-92.83899333,Minnesota
+191,HLN,Helena Regional,Helena,MT,USA,46.60681806,-111.9827503,Montana
+192,HOB,Lea County Regional,Hobbs,NM,USA,32.68752778,-103.2170278,New Mexico
+193,HPN,Westchester Cty,White Plains,NY,USA,41.06695778,-73.70757444,New York
+194,HRL,Valley International,Harlingen,TX,USA,26.22850611,-97.65439389,Texas
+195,HSV,Huntsville International ,Huntsville,AL,USA,34.6404475,-86.77310944,Alabama
+196,HTS,Tri-State Walker-Long ,Huntington,WV,USA,38.36666667,-82.55802778,West Virginia
+197,HYA,Barnstable Mun Boardman Polando ,Hyannis,MA,USA,41.66933639,-70.28035583,Massachusetts
+198,HYS,Hays Municipal,Hays,KS,USA,38.84494167,-99.27403361,Kansas
+199,ICT,Wichita Mid-Continent,Wichita,KS,USA,37.64995889,-97.43304583,Kansas
+200,IDA,Idaho Falls Regional,Idaho Falls,ID,USA,43.51455556,-112.0701667,Idaho
+201,ILG,New Castle County ,Wilmington,DE,USA,39.67872222,-75.60652778,Delaware
+202,ILM,Wilmington International,Wilmington,NC,USA,34.27061111,-77.90255556,North Carolina
+203,IMT,Ford,Iron Mountain Kingsford,MI,USA,45.81835417,-88.1145425,Michigan
+204,INL,Falls International,International Falls,MN,USA,48.56618722,-93.40306667,Minnesota
+205,IPL,Imperial County,Imperial,CA,USA,32.83422028,-115.5787456,California
+206,ISN,Sloulin Field International,Williston,ND,USA,48.17793861,-103.6423467,North Dakota
+207,ISP,Long Island - MacArthur,Islip,NY,USA,40.7952425,-73.10021194,New York
+208,ITH,Tompkins Cty ,Ithaca,NY,USA,42.49102778,-76.45844444,New York
+209,ITO,Hilo International,Hilo,HI,USA,19.72026306,-155.0484703,Hawaii
+210,IYK,Inyokern,Inyokern,CA,USA,35.65884306,-117.8295122,California
+211,JAC,Jackson Hole,Jackson,WY,USA,43.60732417,-110.7377389,Wyoming
+212,JAN,Jackson International,Jackson,MS,USA,32.31116667,-90.07588889,Mississippi
+213,JLN,Joplin Regional,Joplin,MO,USA,37.15181361,-94.49826833,Missouri
+214,JMS,Jamestown Municipal,Jamestown,ND,USA,46.92971944,-98.67819528,North Dakota
+215,JNU,Juneau International,Juneau,AK,USA,58.35496194,-134.5762764,Alaska
+216,KOA,Kona International At Keahole,Kailua Kona,HI,USA,19.73876583,-156.0456314,Hawaii
+217,KTN,Ketchikan International,Ketchikan,AK,USA,55.35556861,-131.71374,Alaska
+218,LAN,Capital City,Lansing,MI,USA,42.7787,-84.58735806,Michigan
+219,LAR,Laramie Regional,Laramie,WY,USA,41.31205,-105.6749864,Wyoming
+220,LAW,Lawton-Ft Sill Regional,Lawton,OK,USA,34.56771444,-98.41663667,Oklahoma
+221,LBB,Lubbock International,Lubbock,TX,USA,33.66363889,-101.8227778,Texas
+222,LCH,Lake Charles Regional,Lake Charles,LA,USA,30.1260975,-93.22340361,Louisiana
+223,LEX,Blue Grass ,Lexington,KY,USA,38.03697222,-84.60538889,Kentucky
+224,LFT,Lafayette Regional,Lafayette,LA,USA,30.20527972,-91.987655,Louisiana
+225,LGB,Long Beach (Daugherty ),Long Beach,CA,USA,33.81772222,-118.1516111,California
+226,LIH,Lihue,Lihue,HI,USA,21.97598306,-159.3389581,Hawaii
+227,LMT,Klamath Falls International,Klamath Falls,OR,USA,42.15614361,-121.7332081,Oregon
+228,LNK,Lincoln Municipal,Lincoln,NE,USA,40.85097222,-96.75925,Nebraska
+229,LRD,Laredo International,Laredo,TX,USA,27.54373861,-99.46154361,Texas
+230,LSE,La Crosse Municipal,La Crosse,WI,USA,43.87937972,-91.25653778,Wisconsin
+231,LWB,Greenbrier Valley,Lewisburg,WV,USA,37.85830556,-80.39947222,West Virginia
+232,LWS,Lewiston-Nez Perce County,Lewiston,ID,USA,46.37449806,-117.0153944,Idaho
+233,LYH,Lynchburg Municipal-Preston Glenn ,Lynchburg,VA,USA,37.32668528,-79.20043056,Virginia
+234,MAF,Midland International,Midland,TX,USA,31.94252778,-102.2019139,Texas
+235,MBS,Mbs International,Saginaw,MI,USA,43.53291472,-84.07964722,Michigan
+236,MCN,Middle Georgia Regional,Macon,GA,USA,32.69284944,-83.64921083,Georgia
+237,MDT,Harrisburg Intl,Harrisburg,PA,USA,40.19349528,-76.76340361,Pennsylvania
+238,MEI,Key ,Meridian,MS,USA,32.33313333,-88.75120556,Mississippi
+239,MFE,McAllen Miller International,McAllen,TX,USA,26.17583333,-98.23861111,Texas
+240,MFR,Rogue Valley International,Medford,OR,USA,42.37422778,-122.8734978,Oregon
+241,MGM,Montgomery Regional Apt,Montgomery,AL,USA,32.30064417,-86.39397611,Alabama
+242,MHK,Manhattan Regional,Manhattan,KS,USA,39.14096722,-96.67083278,Kansas
+243,MHT,Manchester,Manchester,NH,USA,42.93451639,-71.43705583,New Hampshire
+244,MKG,Muskegon County,Muskegon,MI,USA,43.16948806,-86.23822306,Michigan
+245,MLB,Melbourne International ,Melbourne,FL,USA,28.10275,-80.64580556,Florida
+246,MLI,Quad City,Moline,IL,USA,41.44852639,-90.50753917,Illinois
+247,MLU,Monroe Regional,Monroe,LA,USA,32.51086556,-92.03768778,Louisiana
+248,MMH,Mammoth Yosemite,Mammoth Lakes,CA,USA,37.62404861,-118.8377722,California
+249,MOB,Mobile Regional,Mobile,AL,USA,30.69141667,-88.24283333,Alabama
+250,MOD,Modesto City-County-Harry Sham ,Modesto,CA,USA,37.62581722,-120.9544214,California
+251,MOT,Minot International,Minot,ND,USA,48.25937778,-101.2803339,North Dakota
+252,MRY,Monterey Peninsula,Monterey,CA,USA,36.5869825,-121.8429478,California
+253,MSN,Dane County Regional,Madison,WI,USA,43.13985778,-89.33751361,Wisconsin
+254,MSO,Missoula International,Missoula,MT,USA,46.91630556,-114.0905556,Montana
+255,MTJ,Montrose Regional,Montrose,CO,USA,38.50886722,-107.8938333,Colorado
+256,MVY,Marthas Vineyard,Marthas Vineyard,MA,USA,41.39302583,-70.6143325,Massachusetts
+257,MWH,Grant County,Moses Lake,WA,USA,47.20770806,-119.3201897,Washington
+258,MYR,Myrtle Beach International,Myrtle Beach,SC,USA,33.67975,-78.92833333,South Carolina
+259,OAJ,Albert J Ellis,Jacksonville,NC,USA,34.82916444,-77.61213778,North Carolina
+260,OME,Nome,Nome,AK,USA,64.51220222,-165.4452458,Alaska
+261,ORH,Worcester Regional,Worcester,MA,USA,42.26733944,-71.87570944,Massachusetts
+262,OTH,North Bend Muni,North Bend,OR,USA,43.41713889,-124.2460278,Oregon
+263,OTZ,Ralph Wien Memorial,Kotzebue,AK,USA,66.88467694,-162.5985497,Alaska
+264,OXR,Oxnard,Oxnard,CA,USA,34.20080083,-119.2072164,California
+265,PAH,Barkley Regional,Paducah,KY,USA,37.06083333,-88.77375,Kentucky
+266,PFN,Panama City-Bay County International,Panama City,FL,USA,30.21208333,-85.68280556,Florida
+267,PHF,Newport News Williamsburg International,Newport News,VA,USA,37.13189556,-76.4929875,Virginia
+268,PIA,Greater Peoria Regional,Peoria,IL,USA,40.66424333,-89.69330556,Illinois
+269,PIB,Hattiesburg-Laurel Regional,Hattiesburg-Laurel,MS,USA,31.46714944,-89.33705778,Mississippi
+270,PIE,St. Petersburg-Clearwater International,St. Petersburg,FL,USA,27.91076333,-82.68743944,Florida
+271,PIH,Pocatello Regional,Pocatello,ID,USA,42.91130556,-112.5958611,Idaho
+272,PIR,Pierre Regional,Pierre,SD,USA,44.38267694,-100.285965,South Dakota
+273,PLN,Pellston Regional  of Emmet County,Pellston,MI,USA,45.5709275,-84.796715,Michigan
+274,PNS,Pensacola Regional,Pensacola,FL,USA,30.47330556,-87.18744444,Florida
+275,PSC,Tri-Cities,Pasco,WA,USA,46.26468028,-119.1190292,Washington
+276,PSG,James C. Johnson Petersburg,Petersburg,AK,USA,56.80165194,-132.9452781,Alaska
+277,PSP,Palm Springs International,Palm Springs,CA,USA,33.82921556,-116.5062531,California
+278,PUB,Pueblo Memorial,Pueblo,CO,USA,38.28908722,-104.4965722,Colorado
+279,PWM,Portland International Jetport,Portland,ME,USA,43.64616667,-70.30875,Maine
+280,RAP,Rapid City Regional,Rapid City,SD,USA,44.04532139,-103.0573708,South Dakota
+281,RDD,Redding Municipal,Redding,CA,USA,40.50898361,-122.2934019,California
+282,RDM,Roberts ,Redmond,OR,USA,44.25406722,-121.1499633,Oregon
+283,RFD,Greater Rockford,Rockford,IL,USA,42.19536389,-89.09721111,Illinois
+284,RHI,Rhinelander-Oneida County,Rhinelander,WI,USA,45.63119306,-89.46745361,Wisconsin
+285,RKS,Rock Springs-Sweetwater County,Rock Springs,WY,USA,41.5942175,-109.0651928,Wyoming
+286,ROA,Roanoke Regional  Woodrum ,Roanoke,VA,USA,37.32546833,-79.97542833,Virginia
+287,ROC,Greater Rochester Int'l,Rochester,NY,USA,43.11886611,-77.67238389,New York
+288,ROW,Roswell Industrial Air Center,Roswell,NM,USA,33.30155556,-104.5305556,New Mexico
+289,RST,Rochester International,Rochester,MN,USA,43.90882639,-92.49798722,Minnesota
+290,SAF,Santa Fe Municipal,Santa Fe,NM,USA,35.61677778,-106.0881389,New Mexico
+291,SAV,Savannah International,Savannah,GA,USA,32.12758333,-81.20213889,Georgia
+292,SBA,Santa Barbara Municipal,Santa Barbara,CA,USA,34.42621194,-119.8403733,California
+293,SBN,South Bend Regional,South Bend,IN,USA,41.70895361,-86.31847417,Indiana
+294,SBP,San Luis Obispo Co-McChesney ,San Luis Obispo,CA,USA,35.23705806,-120.6423931,California
+295,SCC,Deadhorse,Deadhorse,AK,USA,70.19475583,-148.4651608,Alaska
+296,SGF,Springfield-Branson Regional,Springfield,MO,USA,37.24432611,-93.38685806,Missouri
+297,SGU,St George Muni,St George,UT,USA,37.09058333,-113.5930556,Utah
+298,SHD,Shenandoah Valley Regional,Staunton Harrisonburg,VA,USA,38.26384333,-78.89643806,Virginia
+299,SHV,Shreveport Regional,Shreveport,LA,USA,32.4466275,-93.82559833,Louisiana
+300,SIT,Sitka,Sitka,AK,USA,57.04713806,-135.3615983,Alaska
+301,SJT,San Angelo Regional  Mathis ,San Angelo,TX,USA,31.35775,-100.4963056,Texas
+302,SMX,Santa Maria Pub Capt G Allan Hancock ,Santa Maria,CA,USA,34.89924833,-120.4575825,California
+303,SPI,Capital,Springfield,IL,USA,39.84395194,-89.67761861,Illinois
+304,SPS,Sheppard AFB Wichita Falls Municipal,Wichita Falls,TX,USA,33.98879611,-98.49189333,Texas
+305,SRQ,Sarasota Bradenton International,Sarasota,FL,USA,27.39533333,-82.55411111,Florida
+306,STC,St Cloud Regional,St Cloud,MN,USA,45.54532417,-94.05833667,Minnesota
+307,SUN,Friedman Memorial,Hailey,ID,USA,43.50484139,-114.2965903,Idaho
+308,SUX,Sioux Gateway ,Sioux City,IA,USA,42.40260333,-96.38436694,Iowa
+309,SWF,Stewart,Newburgh,NY,USA,41.50409361,-74.10483833,New York
+310,SYR,Syracuse-Hancock Intl,Syracuse,NY,USA,43.11118694,-76.10631056,New York
+311,TEX,Telluride Regional,Telluride,CO,USA,37.95375861,-107.90848,Colorado
+312,TLH,Tallahassee Regional,Tallahassee,FL,USA,30.39652778,-84.35033333,Florida
+313,TOL,Toledo Express,Toledo,OH,USA,41.58680556,-83.80783333,Ohio
+314,TRI,Tri-Cities Regional,Bristol,TN,USA,36.47521417,-82.40742056,Tennessee
+315,TTN,Trenton-Mercer County ,Trenton,NJ,USA,40.27669111,-74.81346833,New Jersey
+316,TUP,Tupelo Municipal ,Tupelo,MS,USA,34.26810833,-88.769895,Mississippi
+317,TVC,Cherry Capital,Traverse City,MI,USA,44.74144472,-85.582235,Michigan
+318,TWF,Joslin Field - Magic Valley,Twin Falls,ID,USA,42.48180389,-114.4877356,Idaho
+319,TXK,Texarkana Regional-Webb ,Texarkana,AR,USA,33.45370806,-93.99102,Arkansas
+320,TYR,Tyler Pounds ,Tyler,TX,USA,32.35413889,-95.40238611,Texas
+321,TYS,McGhee-Tyson,Knoxville,TN,USA,35.81248722,-83.99285583,Tennessee
+322,VEL,Vernal,Vernal,UT,USA,40.44090167,-109.5099203,Utah
+323,VLD,Valdosta Regional,Valdosta,GA,USA,30.7825,-83.27672222,Georgia
+324,VPS,Eglin Air Force Base,Valparaiso,FL,USA,30.48325,-86.5254,Florida
+325,WRG,Wrangell,Wrangell,AK,USA,56.48432583,-132.3698242,Alaska
+326,WYS,Yellowstone,West Yellowstone,MT,USA,44.68839917,-111.1176375,Montana
+327,XNA,Northwest Arkansas Regional,Fayetteville Springdale Rogers,AR,USA,36.28186944,-94.30681111,Arkansas
+328,YAK,Yakutat,Yakutat,AK,USA,59.50336056,-139.6602261,Alaska
+329,YUM,Yuma MCAS-Yuma International,Yuma,AZ,USA,32.65658333,-114.6059722,Arizona
