@@ -255,11 +255,10 @@ def facet_plot_over_interval(flights_df, x, start_month, end_month, start_day, e
     places = np.array(places.select(place_attribute).collect()).reshape(-1)
     flights_per_place  = compute_flights_per_place(flights_df, start_month, end_month, start_day, end_day, place_attribute)
     fig = make_subplots(rows=x, cols=1) 
-
+    flights_per_place = flights_per_place.toPandas()
     for i in range(len(places)):
         place = places[i]
-        flights_per_place_i = flights_per_place.filter(flights_per_place[place_attribute] == place)
-        flights_per_place_i_pd = flights_per_place_i.toPandas()
+        flights_per_place_i_pd = flights_per_place[flights_per_place[place_attribute] == place]
         place_column_alias = column_aliases[place_attribute]
 
         fig.add_trace(
