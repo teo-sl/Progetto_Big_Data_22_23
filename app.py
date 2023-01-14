@@ -122,15 +122,17 @@ plot1 = html.Div(
                         value='Month',
                     ),
                     html.Br(),
-                    html.H4('Select the Z axis'),
+                    html.H4('Select the type of query'),
                     dcc.RadioItems(
                         id='z-axis-1',
                         options=[
                             {'label': 'Count', 'value': 'count'},
                             {'label': 'Delay', 'value': 'ArrDelay'},
                         ],
+                        style={'display': 'flex', 'flex-direction': 'column'},
                         value='count',
                     ),
+                    html.Br(),
                 ],
             ),
             html.Br(),
@@ -185,17 +187,20 @@ plot2 = html.Div(
         html.H2('Pie widget',style={'text-align': 'center'}),
         dbc.Row([
                  slider,
+                 html.H4(''),
                  html.Br(),
-                 html.H4('Select the Z axis'),
+                 html.H4('Select the type of query'),
                  dcc.RadioItems(
                      id='query-pie',
                      options=[
                          {'label': 'Count', 'value': 'count'},
                          {'label': 'Delay', 'value': 'ArrDelay'},
                      ],
+                     style={'display': 'flex', 'flex-direction': 'column'},
                      value='count',
                  ),
                  html.Br(),
+                 html.H4(''),
                  html.Div(
                      className='control-panel',
                      children=[
@@ -253,16 +258,19 @@ plot3 = html.Div(
                  html.H5('',id='map-routes-title',style={'text-align': 'center'}),
                  html.Br(),
                  slider_map,   
-                 html.H4('Select the Z axis'),
+                 html.H4(''),
+                 html.H4('Select the type of query axis'),
                  dcc.RadioItems(
                      id='query-map-routes',
                      options=[
                          {'label': 'Count', 'value': 'NumFlights'},
                          {'label': 'Delay', 'value': 'AverageArrivalDelay'},
                      ],
+                     style={'display': 'flex', 'flex-direction': 'column'},
                      value='NumFlights',
                  ),
                  html.Br(),
+                 html.H3(''),
                  html.H4('Select the origin'),
                  dcc.Dropdown(
                      id='origin-map-routes',
@@ -271,7 +279,8 @@ plot3 = html.Div(
                      value='BOS',
                      clearable=False
                  ),
-                html.Br(), 
+                 html.Br(), 
+                 html.H3(''),
                  html.H4('Select the scope'),
                  dcc.RadioItems(
                      id='air-state-map-routes',
@@ -279,9 +288,11 @@ plot3 = html.Div(
                          {'label': 'Airports', 'value': 'airports'},
                          {'label': 'States', 'value': 'states'},
                      ],
+                     style={'display': 'flex', 'flex-direction': 'column'},
                      value='airports',
                  ),
                  html.Br(),
+                 html.H3(''),
                  html.Div(
                      className='control-panel',
                      children=[
@@ -326,8 +337,10 @@ plot4 = html.Div(
                     {'label': 'Origin', 'value': 'ORIGIN_STATE'},
                     {'label': 'Destination', 'value': 'DEST_STATE'},
                 ],
+                style={'display': 'flex', 'flex-direction': 'column'},
                 value='ORIGIN_STATE',
             ),
+            html.H4(''),
             html.Br(),
             html.H4('Select the type of query'),
             dcc.RadioItems(
@@ -336,9 +349,11 @@ plot4 = html.Div(
                     {'label': 'Count', 'value': 'count'},
                     {'label': 'Delay', 'value': 'ArrDelay'},
                 ],
+                style={'display': 'flex', 'flex-direction': 'column'},
                 value='count',
             ),
             html.Br(),
+            html.H4(''),
             html.Div(
                 className='control-panel',
                 children=[
@@ -389,6 +404,7 @@ plot5 = html.Div(
             html.H5('',id='airline-period',style={'text-align': 'center'}),
             dbc.Row([
                 slider_airlines,
+                html.H4(''),
                 html.Br(),
                 html.H4('Select the type of query'),
                 
@@ -399,8 +415,10 @@ plot5 = html.Div(
                         {'label': 'Delay', 'value': 'avg'},
                         {'label': 'Cancelled', 'value': 'Cancelled'}
                     ],
+                    style={'display': 'flex', 'flex-direction': 'column'},
                     value='count',
                 ),
+                html.H4(''),
                 html.Br(),
                 html.Div(
                     className='control-panel',
@@ -453,8 +471,10 @@ plot6 = html.Div(
                         {'label':'By month','value':'Month'},
                         {'label':'By day of week','value':'DayOfWeek'}
                     ],
+                    style={'display': 'flex', 'flex-direction': 'column'},
                     value = 'FlightDate'
                 ),
+                html.H4(''),
                 html.Br(),
                 html.H4('Select the x axis'),
                 dcc.Dropdown(
@@ -463,6 +483,7 @@ plot6 = html.Div(
                     value="ArrDelay",
                     clearable=False
                 ),
+                html.H4(''),
                 html.Br(),
                 html.H4('Select the y axis'),
                 dcc.Dropdown(
@@ -471,14 +492,16 @@ plot6 = html.Div(
                     value="DepDelay",
                     clearable=False
                 ),
+                html.H4(''),
                 html.Br(),
-                html.H4('Select the z axis'),
+                html.H4('Select the type of query'),
                 dcc.Dropdown(
                     id = 'z-scatter',
                     options = option_scatter,
                     value="count",
                     clearable=False
                 ),
+                html.H4(''),
                 html.Br(),
                 html.Div(
                     className='control-panel',
@@ -530,6 +553,7 @@ plot7 = html.Div(
         html.H5('',id='text-period',style={'text-align': 'center'}),
         dbc.Row([
             slider_text,
+            html.H4(''),
             html.Br(),
             html.Div(
                 className='control-panel',
@@ -828,6 +852,7 @@ mean_arr_del_per_dest_plot = html.Div(
                             {'label': 'Weekly', 'value': 'Weekly'},
                             {'label': 'Monthly', 'value': 'Monthly'},
                         ],
+                        style={'display': 'flex', 'flex-direction': 'column'},
                         value="Daily"
                     ),
             )
@@ -899,6 +924,7 @@ mean_dep_del_per_origin_plot = html.Div(
                             {'label': 'Weekly', 'value': 'Weekly'},
                             {'label': 'Monthly', 'value': 'Monthly'},
                         ],
+                        style={'display': 'flex', 'flex-direction': 'column'},
                         value="Daily"
                     ),
             )

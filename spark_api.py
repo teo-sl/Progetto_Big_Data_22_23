@@ -7,7 +7,6 @@ from pyspark.sql.functions import *
 import json
 from pyspark.sql.types import StructType
 import pickle
-from multiprocessing.pool import ThreadPool
 
 ###### CONSTANTS ########
 
